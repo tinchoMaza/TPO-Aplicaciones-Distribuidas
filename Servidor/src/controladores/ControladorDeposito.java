@@ -63,15 +63,15 @@ public class ControladorDeposito {
 				if (stockTotal>0){
 					for (Ubicacion u: ubicaciones){
 						for (ArticuloDeposito a : u.getArticulos())
-							if (a.getArticulo().getIdArticulo() == it.getArticulo().getIdArticulo() && a.getEstado().equals("DISPONIBLE")){
+							if (a.getArticulo().getIdArticulo() == it.getArticulo().getIdArticulo() && it.getCant()>0 && a.getEstado().equals("DISPONIBLE")){
 								{
 									a.reservarStock(pedido.getNroPedido());
-									it.setCant(it.getCant()-1);
 									a.update();
+									it.setCant(it.getCant()-1);
 								}
 							}
 					}
-					it.save();
+					it.update();
 				}
 			}
 			
