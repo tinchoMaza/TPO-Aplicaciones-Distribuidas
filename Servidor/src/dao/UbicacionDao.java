@@ -3,8 +3,10 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import org.hibernate.*;
+
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
 
 import entities.ClienteEntity;
 import entities.RemitoEntity;

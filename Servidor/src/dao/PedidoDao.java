@@ -74,7 +74,7 @@ public class PedidoDao {
 		PedidoEntity aux;
 		Session s = sf.openSession();
 		s.beginTransaction();
-		aux = (PedidoEntity)s.createQuery("Select p From PedidoEntity p where p.nroPedido = ?").setInteger(0, idPedido).uniqueResult();
+		aux = (PedidoEntity)s.createQuery("Select p From PedidoEntity p where p.nroPedido = ?").setParameter(0, idPedido).uniqueResult();
 		if (aux != null) 
 			return aux.toNegocio();
 		else

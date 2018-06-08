@@ -2,7 +2,7 @@ package dao;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import entities.ProveedorEntity;
 import excepciones.ProveedorException;
 import hibernate.HibernateUtil;

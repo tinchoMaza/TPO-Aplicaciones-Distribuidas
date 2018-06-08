@@ -154,15 +154,17 @@ public class ControladorDeposito {
 				}
 				
 				//modificar el array pedidosRealizados en ControladorClientes
-				OrdenDePedido nuevaOP = OrdenDePedidoDao.getInstancia().buscarOPByID(op.getIdOp());
-				orDePedidos.add(nuevaOP);
+				//OrdenDePedido nuevaOP = OrdenDePedidoDao.getInstancia().buscarOPByID(op.getIdOp());
+				orDePedidos.add(op);
 				Proveedor prov = ProveedoresDao.getInstancia().buscarProveedorByCuit(2456932);
-				ControladorCompras.getInstancia().emitirOC(nuevaOP, prov);	
+				ControladorCompras.getInstancia().emitirOC(op, prov);	
 			}
 			
 			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
 			nuevoPedido.setEstado("APROBADO_EN_ESPERA_STOCK");
 			nuevoPedido.update();
+			//pedido.setEstado("APROBADO_EN_ESPERA_STOCK");
+			//pedido.update();
 	
 		}
 		else
@@ -171,6 +173,8 @@ public class ControladorDeposito {
 			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
 			nuevoPedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
 			nuevoPedido.update();
+			//pedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
+			//pedido.update();
 			//modificar el array pedidosRealizados en ControladorClientes
 		}
 	}

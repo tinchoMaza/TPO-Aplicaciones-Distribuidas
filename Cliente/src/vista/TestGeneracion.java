@@ -22,14 +22,14 @@ public class TestGeneracion {
 		
 		/****ALTA PEDIDO CON ITEMS QUE EXISTA STOCK DE TODO****/
 		
-		/*List<ItemPedidoDTO> misItems = new ArrayList<ItemPedidoDTO>();
+	/*	List<ItemPedidoDTO> misItems = new ArrayList<ItemPedidoDTO>();
 		ItemPedidoDTO item = new ItemPedidoDTO ();
 		try {
 			item.setArticulo(BusinessDelegate.getInstancia().buscarArticuloById(1));
 			item.setCant(8);
 			misItems.add(item);
 			try {
-				BusinessDelegate.getInstancia().altaPedido(misItems, "PENDIENTE", BusinessDelegate.getInstancia().buscarClienteByCuit(23126864), "FormaDePago", "Calle", 123, "Localidad", 1838);
+				BusinessDelegate.getInstancia().altaPedido(misItems, "PENDIENTE", BusinessDelegate.getInstancia().buscarClienteByDni(12686), "FormaDePago", "Calle", 123, "Localidad", 1838);
 				System.out.println("pedido ok");
 			} catch (RemoteException e) {
 				System.out.println(e.getMessage());
@@ -45,13 +45,13 @@ public class TestGeneracion {
 		} catch (RemoteException | ArticuloException e1) {
 			System.out.println(e1.getMessage());
 		}
-*/
-		
+
+		*/
 
 		try {
 			//setear idoc a la que figura en la bd
 			//int idOC=15;
-			BusinessDelegate.getInstancia().procesarOC(15);
+			BusinessDelegate.getInstancia().procesarOC(1);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

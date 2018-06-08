@@ -1,7 +1,8 @@
 package dao;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 
 import excepciones.PedidoException;
 import hibernate.HibernateUtil;
@@ -20,14 +21,15 @@ public class ItemOrdenDePedidoDao {
 		return instancia;
 	}
 
-	public void save(ItemOrdenDePedido itemOP) throws PedidoException{
+	public int save(ItemOrdenDePedido itemOP) throws PedidoException{
 		if (itemOP != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(itemOP.toEntity());
+			int id = (Integer) s.save(itemOP.toEntity());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new PedidoException("Error al guardar un item de pedido en la BD");
 		}

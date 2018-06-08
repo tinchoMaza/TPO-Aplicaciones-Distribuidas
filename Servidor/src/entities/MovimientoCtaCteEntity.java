@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
 
@@ -8,8 +9,12 @@ import negocio.MovimientoCtaCte;
 
 @Entity
 @Table(name="MovimientoCtaCte")
-public class MovimientoCtaCteEntity {
+public class MovimientoCtaCteEntity implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7205765250898168265L;
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "idCuentaCorriente")
 	private CuentaCorrienteEntity cuentaCorriente;

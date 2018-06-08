@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 
 import entities.ArticuloDepositoEntity;
 import entities.ArticuloEntity;

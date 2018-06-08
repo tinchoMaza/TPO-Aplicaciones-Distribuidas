@@ -1,7 +1,8 @@
 package dao;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 
 import excepciones.RemitoException;
 import hibernate.HibernateUtil;

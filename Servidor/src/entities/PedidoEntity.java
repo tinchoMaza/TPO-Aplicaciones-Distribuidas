@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
 
@@ -8,7 +9,12 @@ import negocio.Pedido;
 
 @Entity
 @Table (name="Pedido")
-public class PedidoEntity {
+public class PedidoEntity implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4887603037351010209L;
 
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)

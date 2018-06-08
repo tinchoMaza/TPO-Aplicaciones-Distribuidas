@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
 
@@ -8,7 +9,11 @@ import javax.persistence.*;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="tipoMovimiento",discriminatorType=DiscriminatorType.STRING, length=10)
 
-public abstract class MovimientoEntity {
+public abstract class MovimientoEntity implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4820982784317900909L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Integer idMov;

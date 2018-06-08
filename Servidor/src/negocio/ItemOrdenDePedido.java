@@ -12,8 +12,8 @@ public class ItemOrdenDePedido {
 	private Articulo articulo;
 	private int cant;
 
-	public void save() throws PedidoException{
-		ItemOrdenDePedidoDao.getInstancia().save(this);
+	public int save() throws PedidoException{
+		return ItemOrdenDePedidoDao.getInstancia().save(this);
 
 	}
 	public void delete(){

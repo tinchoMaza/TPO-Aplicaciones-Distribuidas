@@ -47,6 +47,7 @@ public class ControladorCompras {
 		oc.setFecha(Calendar.getInstance().getTime());
 		int id = oc.save();
 		oc.setIdOc(id);		
+		JOptionPane.showMessageDialog(null, "" + op.getArticulos().size());
 		for (ItemOrdenDePedido item : op.getArticulos()) {
 			oc.nuevoItemOC(item.getArticulo(), item.getCant(), item.getArticulo().getPrecioVentaUnitario());
 		}

@@ -2,13 +2,15 @@ package dao;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 
 import dto.ArticuloDTO;
 import entities.ClienteEntity;
 import entities.OrdenDePedidoEntity;
 
 import java.util.*;
+
+import javax.swing.JOptionPane;
 
 import excepciones.ClienteException;
 import excepciones.OrdenDePedidoException;
@@ -99,9 +101,15 @@ public class OrdenDePedidoDao {
 	public OrdenDePedido buscarOPByID(int idOp) throws PedidoException {
 		OrdenDePedidoEntity ord = null;
 		Session session = sf.openSession();
-		Query query = session.createQuery("select o from OrdenDePedidoEntity o where o.idOp=?");
-		query.setParameter(0, idOp);
+		session.beginTransaction();
+		JOptionPane.showMessageDialog(null,"1 + id es  " + idOp);
+		Query query = session.createQuery("from OrdenDePedidoEntity o where o.idOp=?");
+		query.setInteger(0, idOp);
 		ord = (OrdenDePedidoEntity) query.uniqueResult();
+		session.flush();
+		session.getTransaction().commit();
+		session.close();
+		JOptionPane.showMessageDialog(null, "" + ord.getIdOP() + " " + ord.getItems().size());
 		if (ord == null) 
 			throw new PedidoException("Error al buscar la orden de pedido en la BD");
 		else

@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.*;
 
 import javax.persistence.*;
@@ -9,8 +10,9 @@ import negocio.MovimientoCtaCte;
 
 @Entity
 @Table(name="CuentaCorriente")
-public class CuentaCorrienteEntity {
+public class CuentaCorrienteEntity implements Serializable{
 	
+	private static final long serialVersionUID = -7035154393489168267L;
 	@Id
 	private Integer idCuentaCorriente;
 	private Date fecha;

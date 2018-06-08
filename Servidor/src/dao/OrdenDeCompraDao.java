@@ -4,7 +4,7 @@ package dao;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 
 import entities.ClienteEntity;
 import entities.OrdenDeCompraEntity;

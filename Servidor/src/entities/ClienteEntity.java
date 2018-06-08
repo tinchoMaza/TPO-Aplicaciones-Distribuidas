@@ -1,5 +1,7 @@
 package entities;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 import entities.CuentaCorrienteEntity;
@@ -8,7 +10,8 @@ import negocio.Cliente;
 @Entity
 @Table(name="Cliente")
 
-public class ClienteEntity {
+public class ClienteEntity implements Serializable {
+	private static final long serialVersionUID = 3523307646994482451L;
 	
 	@Id
 	private Integer dni;
