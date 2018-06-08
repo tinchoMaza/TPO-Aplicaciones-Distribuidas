@@ -95,7 +95,7 @@ public class OrdenDeCompraEntity implements Serializable{
 	}
 
 	public OrdenDeCompra toNegocio() {
-		OrdenDeCompra aux = new OrdenDeCompra(this.idOC,this.fecha,this.proveedor.toNegocio(),this.OP.toNegocio(),this.estado);
+		OrdenDeCompra aux = new OrdenDeCompra(this.idOC,this.fecha,this.proveedor.toNegocio(),this.OP.toNegocio2(),this.estado);
 		aux.setItems(this.getItemsNegocio(aux));
 		return aux;
 		

@@ -47,12 +47,12 @@ public class ControladorDeposito {
 	public void completarPedidosRestantes(int nroPedido) throws PedidoException, ArticuloException {
 		//este se llama para buscar todos los pedidos que no generaron una orden de pedido porque ya existia una para determinado articulo
 		List<Pedido> pedidosRestantes = PedidoDao.getInstancia().buscarPedidosByEstadoPorOrden("APROBADO_EN_ESPERA_STOCK", nroPedido);
-		for(Pedido p : pedidosRestantes)
+		for(Pedido p : pedidosRestantes) {
 			this.completarPedido(p);
+		}
 	}
 
 	public void completarPedido(Pedido pedido) throws PedidoException, ArticuloException {
-		JOptionPane.showMessageDialog(null, "entro a completar pedido" + pedido.getNroPedido() + " - " + pedido.getItemsPedido().get(0).getIdItemPedido());
 		//Este se llama cuando se completa una orden de compra
 		int stockTotal=0;
 		boolean pedidoCompleto=true;
@@ -89,8 +89,9 @@ public class ControladorDeposito {
 
 		}
 		if(pedidoCompleto==true) {
-			pedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
-			pedido.update();
+			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
+			nuevoPedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
+			nuevoPedido.update();
 			//modificar el array pedidosRealizados en ControladorClientes
 		}
 	}
@@ -151,20 +152,25 @@ public class ControladorDeposito {
 					}
 					op.nuevoItemOP(a,cantidadAComprar);
 				}
+				
 				//modificar el array pedidosRealizados en ControladorClientes
-
-				orDePedidos.add(op);
+				OrdenDePedido nuevaOP = OrdenDePedidoDao.getInstancia().buscarOPByID(op.getIdOp());
+				orDePedidos.add(nuevaOP);
 				Proveedor prov = ProveedoresDao.getInstancia().buscarProveedorByCuit(2456932);
-				ControladorCompras.getInstancia().emitirOC(op, prov);	
+				ControladorCompras.getInstancia().emitirOC(nuevaOP, prov);	
 			}
-			pedido.setEstado("APROBADO_EN_ESPERA_STOCK");
-			pedido.update();
+			
+			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
+			nuevoPedido.setEstado("APROBADO_EN_ESPERA_STOCK");
+			nuevoPedido.update();
 	
 		}
 		else
 		{
-			pedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
-			pedido.update();
+
+			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
+			nuevoPedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
+			nuevoPedido.update();
 			//modificar el array pedidosRealizados en ControladorClientes
 		}
 	}
@@ -194,28 +200,29 @@ public class ControladorDeposito {
 	}
 
 	public void ubicar(List<ArticuloDeposito> articulosRecibidos) throws ArticuloException, UbicacionException{
-		int help = articulosRecibidos.size();
+		boolean fueInsertado;
 		for (ArticuloDeposito a : articulosRecibidos) {
-			boolean fueInsertado=false;
+			fueInsertado = false;
 			for (Ubicacion u : ubicaciones) {
-				if(u.estaLibre() ||  (u.getLote() == a.getLote().getIdLote() && u.getCapacidadDisponible() >= a.getArticulo().getCapacidadArticulo()))
-					if(fueInsertado == false) {
-						u.getArticulos().add(a);
+				if(fueInsertado == false) {
+					if(u.estaLibre() ||  (u.getLote() == a.getLote().getIdLote() && u.getCapacidadDisponible() >= a.getArticulo().getCapacidadArticulo())) {
 						a.setUbicacion(u);
-						a.save();
+						u.getArticulos().add(a);
+						int id = a.save();
+						a.setIdArticuloDeposito(id);
 						if(u.getEstado().equals("DISPONIBLE")) {
 							u.setEstado("OCUPADA");
 						}
 						u.update();
 						fueInsertado = true;
-						help-=1;
+						Ubicacion nuevaUbicacion = UbicacionDao.getInstancia().buscarUbicacionById(u.getIdUbicacion());
+						u = nuevaUbicacion;
 					}
+				}
 			}
 		}
-		if(help>0)
-			throw new UbicacionException("Algun articulo no pudo ser ubicado - Revisar");
-	}
 
+	}
 	public void cargarTodasUbicacionesYArticulos() {
 		List<Ubicacion> ubs = UbicacionDao.getInstancia().cargarUbicaciones();
 		List<ArticuloDeposito> arts = ArticuloDepositoDao.getInstancia().cargarArticulosDeposito();

@@ -34,6 +34,7 @@ public class ArticuloDeposito {
 		this.lote = lote;
 		this.reservaIdPedido=null;
 	}
+	
 
 
 	public ArticuloDeposito() {
@@ -44,13 +45,24 @@ public class ArticuloDeposito {
 		ArticuloDepositoEntity aux = new ArticuloDepositoEntity();
 		aux.setArticulo(this.articulo.toEntity());
 		aux.setEstado(this.estado);
-		aux.setLote(this.lote.toEntity());
+		aux.setLote(this.lote.toEntity2());
 		aux.setUbicacion(this.ubicacion.toEntity());
 		aux.setReservaIdPedido(this.reservaIdPedido);
 		//aux.setIdArticuloDeposito(this.idArticuloDeposito);
 		return aux;
 	}
 
+	public ArticuloDepositoEntity toEntity2(){
+		ArticuloDepositoEntity aux = new ArticuloDepositoEntity();
+		aux.setArticulo(this.articulo.toEntity());
+		aux.setEstado(this.estado);
+		aux.setLote(this.lote.toEntity2());
+		aux.setUbicacion(this.ubicacion.toEntity());
+		aux.setReservaIdPedido(this.reservaIdPedido);
+		aux.setIdArticuloDeposito(this.idArticuloDeposito);
+		return aux;
+	}
+	
 	public ArticuloDepositoDTO toDTO() {
 		ArticuloDepositoDTO aux = new ArticuloDepositoDTO();
 		aux.setArticulo(this.getArticulo().toDTO());
@@ -62,8 +74,8 @@ public class ArticuloDeposito {
 		return aux;
 	}
 
-	public void save() throws ArticuloException {
-		ArticuloDepositoDao.getInstancia().save(this);	
+	public int save() throws ArticuloException {
+		return ArticuloDepositoDao.getInstancia().save(this);	
 	}
 
 	public void update() throws ArticuloException{

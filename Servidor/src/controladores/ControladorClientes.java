@@ -37,13 +37,11 @@ public class ControladorClientes {
 
 		Cliente c = new Cliente(dni, nombre, rznSoc, cuit, limCredito, cuentaCorriente, condEspePago, notaAdv, calleDom, nroDom, localidadDom, cpDom);
 		c.save();
-		//Agrega en memoria
 		misClientes.add(c);
 	}
 
 	public void borrarCliente(int dni) throws ClienteException{
 		ClienteDao.getInstancia().delete(ClienteDao.getInstancia().buscarClienteByDni(dni));
-		//Remueve de memoria
 		for(Cliente c : misClientes) {
 			if(c.getDni() == dni) {
 				misClientes.remove(c);
@@ -53,7 +51,6 @@ public class ControladorClientes {
 	}
 
 	public ClienteDTO buscarClienteByDni(int dni) throws ClienteException{
-		//Chequea en memoria
 		for (Cliente c : misClientes)
 		{
 		   if (c.getDni() == dni)
@@ -68,7 +65,7 @@ public class ControladorClientes {
 
 	public List<PedidoDTO> buscarPedidosByCliente(int dni) throws PedidoException{
 		List<PedidoDTO> devolver = new ArrayList<PedidoDTO>();
-		//Chequea en memoria
+
 		for (Pedido p : pedidosRealizados)
 		{
 		   if (p.getCliente().getDni() == dni) {
@@ -99,6 +96,8 @@ public class ControladorClientes {
 	}
 
 	public void autorizarPedido(boolean autorizado, PedidoDTO pedido) throws PedidoException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
+		//poner parte de memoria
+		
 			Pedido p = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
 			if (autorizado == true)
 			{
@@ -134,7 +133,6 @@ public class ControladorClientes {
 		Pedido pedido = new Pedido(estado ,cliente, fechaGeneracion, fechaDespacho,fechaEntregaEsperada, fechaEntrega, precioTotalBruto, precioTotalFinal, formaDePago, calleDireccEnvio, nroDireccEnvio, localidadDireccEnvio, cpDirecEnvio);
 		id = pedido.save();
 		pedido.setNroPedido(id);
-		pedidosRealizados.add(pedido);
 		for(ItemPedidoDTO item : itemsPedido){
 			Articulo articulo = null;
 			articulo = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
@@ -142,6 +140,9 @@ public class ControladorClientes {
 				pedido.nuevoItemPedido(item.getCant(),articulo);		
 			}
 		}
-		autorizarPedido(true, pedido.toDTO()); //no va a estar mas aca
+		Pedido pedidoNuevo = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
+		pedidosRealizados.add(pedidoNuevo);
+		
+		autorizarPedido(true, pedidoNuevo.toDTO()); //no va a estar mas aca
 	}
 }

@@ -26,6 +26,10 @@ public class Lote {
 	public LoteEntity toEntity() {
 		return new LoteEntity(this.fechaVenc);
 	}
+	
+	public LoteEntity toEntity2() {
+		return new LoteEntity(this.idLote,this.fechaVenc);
+	}
 
 	public LoteDTO toDTO() {
 		LoteDTO aux = new LoteDTO();

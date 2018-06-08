@@ -101,4 +101,15 @@ public class OrdenDePedidoEntity implements Serializable {
 		}
 		return op;
 	}
+	
+	public OrdenDePedido toNegocio2() {
+		OrdenDePedido op = new OrdenDePedido();
+		op.setPedido(this.pedido.toNegocio());
+		op.setIdOp(this.idOP);
+		op.setEstado(this.estado);
+		for (ItemOrdenDePedidoEntity item : this.items) {
+			op.getArticulos().add(item.toNegocio2(op));
+		}
+		return op;
+	}
 }

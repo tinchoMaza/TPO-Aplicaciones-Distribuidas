@@ -164,8 +164,7 @@ public class OrdenDePedido {
 
 	public void nuevoItemOP(Articulo a, int cantidadAComprar) throws PedidoException {
 		ItemOrdenDePedido it = new ItemOrdenDePedido(this,a,cantidadAComprar);
-		this.articulos.add(it);
-		//it.save();
+		it.save();
 	}
 
 

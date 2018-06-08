@@ -47,10 +47,11 @@ public class ControladorCompras {
 		oc.setFecha(Calendar.getInstance().getTime());
 		int id = oc.save();
 		oc.setIdOc(id);		
-		//this.misOC.add(oc);
 		for (ItemOrdenDePedido item : op.getArticulos()) {
 			oc.nuevoItemOC(item.getArticulo(), item.getCant(), item.getArticulo().getPrecioVentaUnitario());
 		}
+		OrdenDeCompra nuevaOC = OrdenDeCompraDao.getInstancia().buscarOCById(oc.getIdOc());
+		this.misOC.add(nuevaOC);
 	}
 	public List<OrdenDeCompra> buscarByEstado(String estado){
 		return misOC;
@@ -63,13 +64,15 @@ public class ControladorCompras {
 	}
 
 	public void procesarOC(int idOC) throws PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException {
-		OrdenDeCompra OC = OrdenDeCompraDao.getInstancia().buscarOPById(idOC);
+		// buscar memoria
+		
+		OrdenDeCompra OC = OrdenDeCompraDao.getInstancia().buscarOCById(idOC);
 		List<ArticuloDeposito> articulosRecibidos = new ArrayList<ArticuloDeposito>();
 		//seteo por defecto que el lote vence en 180 dias
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DATE, 180);
 		Date fechaLote = c.getTime();
-		Lote lote= new Lote(fechaLote);
+		Lote lote = new Lote(fechaLote);
 		int id = lote.save();
 		lote.setIdLote(id);
 		for (ItemOrdenDeCompra item : OC.getItems()) {

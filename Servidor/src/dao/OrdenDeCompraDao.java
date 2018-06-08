@@ -63,7 +63,7 @@ public class OrdenDeCompraDao {
 	}
 
 
-	public OrdenDeCompra buscarOPById(int id) throws OrdenDeCompraException  {
+	public OrdenDeCompra buscarOCById(int id) throws OrdenDeCompraException  {
 		OrdenDeCompraEntity oc = null;
 		Session session = sf.openSession();
 		Query query = session.createQuery("select o from OrdenDeCompraEntity o where o.idOC=?");

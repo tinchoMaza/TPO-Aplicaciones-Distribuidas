@@ -12,6 +12,7 @@ import java.util.*;
 
 import excepciones.ClienteException;
 import excepciones.OrdenDePedidoException;
+import excepciones.PedidoException;
 import hibernate.HibernateUtil;
 import negocio.Articulo;
 import negocio.Cliente;
@@ -93,6 +94,18 @@ public class OrdenDePedidoDao {
 							return true;
 				}
 		return false;
+	}
+
+	public OrdenDePedido buscarOPByID(int idOp) throws PedidoException {
+		OrdenDePedidoEntity ord = null;
+		Session session = sf.openSession();
+		Query query = session.createQuery("select o from OrdenDePedidoEntity o where o.idOp=?");
+		query.setParameter(0, idOp);
+		ord = (OrdenDePedidoEntity) query.uniqueResult();
+		if (ord == null) 
+			throw new PedidoException("Error al buscar la orden de pedido en la BD");
+		else
+			return ord.toNegocio2();
 	}
 
 }

@@ -29,15 +29,16 @@ public class ArticuloDepositoDao {
 	
 	
 
-	public void save(ArticuloDeposito articulo) throws ArticuloException{
+	public int save(ArticuloDeposito articulo) throws ArticuloException{
 		if (articulo != null){
 			SessionFactory sf = HibernateUtil.getSessionFactory();
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.saveOrUpdate(articulo.toEntity());
+			int id = (Integer) s.save(articulo.toEntity());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new ArticuloException("Error en el guardado del articulo en la BD");
 		}
@@ -47,7 +48,7 @@ public class ArticuloDepositoDao {
 		if (articulo != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(articulo.toEntity());
+			s.update(articulo.toEntity2());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();

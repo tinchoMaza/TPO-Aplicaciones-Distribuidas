@@ -2,6 +2,8 @@ package negocio;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 import dao.ArticuloDao;
 import dao.OrdenDeCompraDao;
 import dto.ItemOrdenDeCompraDTO;

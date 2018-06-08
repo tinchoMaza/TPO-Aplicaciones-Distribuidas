@@ -6,8 +6,10 @@ import javax.persistence.*;
 import org.hibernate.*;
 import org.hibernate.Query;
 
+import entities.ClienteEntity;
 import entities.RemitoEntity;
 import entities.UbicacionEntity;
+import excepciones.ClienteException;
 import excepciones.RemitoException;
 import excepciones.UbicacionException;
 import hibernate.HibernateUtil;
@@ -76,6 +78,19 @@ public class UbicacionDao {
 		session.getTransaction().commit();
 		session.close();
 		return ubicaciones;
+	}
+
+
+	public Ubicacion buscarUbicacionById(String idUbicacion) throws UbicacionException {
+		UbicacionEntity ue = null;
+		Session session = sf.openSession();
+		Query query = session.createQuery("select u from UbicacionEntity u where u.idUbicacion=?");
+		query.setParameter(0, idUbicacion);
+		ue = (UbicacionEntity) query.uniqueResult();
+		if (ue == null) 
+			throw new UbicacionException("Error al buscar la ubicacion en la BD");
+		else
+			return ue.toNegocio();
 	}
 
 }
