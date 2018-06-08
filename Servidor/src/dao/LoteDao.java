@@ -1,5 +1,7 @@
 package dao;
 
+import javax.swing.JOptionPane;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 
@@ -20,13 +22,15 @@ public class LoteDao {
 		return instancia;
 	}
 
-	public void save(Lote lote) throws LoteException{
+	public int save(Lote lote) throws LoteException{
 		if (lote != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(lote.toEntity());
+			Integer id = (Integer) s.save(lote.toEntity());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new LoteException("Error al guardar un lote en la BD");
 		}

@@ -12,10 +12,23 @@ public class LoteEntity implements Serializable{
 	private static final long serialVersionUID = -8368090500577751115L;
 	
 	@Id
-	private Integer idLote;	
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	private Integer idLote;
+	
 	private Date fechaVenc;
 
 	public LoteEntity(){}
+	
+	public LoteEntity(Date fecha) {
+		super();
+		this.fechaVenc = fecha;
+	}
+
+	public LoteEntity(Integer idLote, Date fechaVenc) {
+		super();
+		this.idLote = idLote;
+		this.fechaVenc = fechaVenc;
+	}
 
 	public Lote toNegocio() {
 		  return new Lote(this.idLote,this.fechaVenc);

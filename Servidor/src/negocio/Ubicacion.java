@@ -38,9 +38,9 @@ public class Ubicacion {
 	}
 
 	public float getCapacidadDisponible(){
+		//entra muchas veces aca
 		int disponible = capacidad;
 		for (ArticuloDeposito a : articulos) {
-			JOptionPane.showMessageDialog(null, "" + disponible + " - " + a.getArticulo().getCapacidadArticulo() + " - " + a.getArticulo().getNombre());
 			disponible -= a.getArticulo().getCapacidadArticulo();
 		}
 		return disponible;

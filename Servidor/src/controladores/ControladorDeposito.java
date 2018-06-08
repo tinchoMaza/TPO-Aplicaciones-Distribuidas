@@ -194,21 +194,25 @@ public class ControladorDeposito {
 	}
 
 	public void ubicar(List<ArticuloDeposito> articulosRecibidos) throws ArticuloException, UbicacionException{
+		int help = articulosRecibidos.size();
 		for (ArticuloDeposito a : articulosRecibidos) {
+			boolean fueInsertado=false;
 			for (Ubicacion u : ubicaciones) {
-				if(u.estaLibre() ||  (u.getLote() == a.getLote().getIdLote() && u.getCapacidadDisponible() >= a.getArticulo().getCapacidadArticulo())) {
-					u.getArticulos().add(a);
-					a.setUbicacion(u);
-					a.update();
-					if(u.getEstado().equals("DISPONIBLE")) {
-						u.setEstado("OCUPADA");
+				if(u.estaLibre() ||  (u.getLote() == a.getLote().getIdLote() && u.getCapacidadDisponible() >= a.getArticulo().getCapacidadArticulo()))
+					if(fueInsertado == false) {
+						u.getArticulos().add(a);
+						a.setUbicacion(u);
+						a.save();
+						if(u.getEstado().equals("DISPONIBLE")) {
+							u.setEstado("OCUPADA");
+						}
 						u.update();
+						fueInsertado = true;
+						help-=1;
 					}
-					articulosRecibidos.remove(a);
-				}
 			}
 		}
-		if(!articulosRecibidos.isEmpty())
+		if(help>0)
 			throw new UbicacionException("Algun articulo no pudo ser ubicado - Revisar");
 	}
 

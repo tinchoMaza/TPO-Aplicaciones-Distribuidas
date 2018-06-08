@@ -34,7 +34,8 @@ public class ArticuloDepositoDao {
 			SessionFactory sf = HibernateUtil.getSessionFactory();
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(articulo.toEntity());
+			s.saveOrUpdate(articulo.toEntity());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}else{

@@ -64,17 +64,17 @@ public class ControladorCompras {
 
 	public void procesarOC(int idOC) throws PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException {
 		OrdenDeCompra OC = OrdenDeCompraDao.getInstancia().buscarOPById(idOC);
-		Lote loteRandom=null;
 		List<ArticuloDeposito> articulosRecibidos = new ArrayList<ArticuloDeposito>();
 		//seteo por defecto que el lote vence en 180 dias
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DATE, 180);
 		Date fechaLote = c.getTime();
+		Lote lote= new Lote(fechaLote);
+		int id = lote.save();
+		lote.setIdLote(id);
 		for (ItemOrdenDeCompra item : OC.getItems()) {
-			loteRandom= new Lote(fechaLote);
-			//Crear funcion que genere un lote random
 			for (int cant = item.getCantidad() ; cant > 0 ; cant--)
-				articulosRecibidos.add(new ArticuloDeposito(item.getArticulo(), loteRandom));
+				articulosRecibidos.add(new ArticuloDeposito(item.getArticulo(), lote));
 		}		
 		ControladorDeposito.getInstancia().ubicar(articulosRecibidos);
 		OC.setEstado("COMPLETADA");

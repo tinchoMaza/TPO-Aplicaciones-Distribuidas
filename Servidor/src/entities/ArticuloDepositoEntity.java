@@ -45,8 +45,6 @@ public class ArticuloDepositoEntity implements Serializable{
 	}
 
 
-
-
 	public ArticuloDeposito toNegocio() {
 		ArticuloDeposito aux = new ArticuloDeposito();
 		aux.setEstado(this.getEstado());

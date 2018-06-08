@@ -37,7 +37,7 @@ public class ArticuloDeposito {
 
 
 	public ArticuloDeposito() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	public ArticuloDepositoEntity toEntity(){
@@ -45,7 +45,7 @@ public class ArticuloDeposito {
 		aux.setArticulo(this.articulo.toEntity());
 		aux.setEstado(this.estado);
 		aux.setLote(this.lote.toEntity());
-		aux.setUbicacion(this.ubicacion.toEntity2());
+		aux.setUbicacion(this.ubicacion.toEntity());
 		aux.setReservaIdPedido(this.reservaIdPedido);
 		//aux.setIdArticuloDeposito(this.idArticuloDeposito);
 		return aux;

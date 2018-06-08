@@ -23,18 +23,8 @@ public class Lote {
 		this.fechaVenc = fechaVenc;
 	}
 
-
-	public int cantDiasAVencer(){
-
-		return 0;
-
-	}
-
 	public LoteEntity toEntity() {
-		LoteEntity aux = new LoteEntity();
-		aux.setFechaVenc(this.getFechaVenc());
-		aux.setIdLote(this.getIdLote());
-		return aux;
+		return new LoteEntity(this.fechaVenc);
 	}
 
 	public LoteDTO toDTO() {
@@ -62,13 +52,8 @@ public class Lote {
 		this.fechaVenc = fechaVenc;
 	}
 
-	public void save() throws LoteException {
-		LoteDao.getInstancia().save(this);
+	public int save() throws LoteException {
+		return LoteDao.getInstancia().save(this);
 		
 	}
-
-
-
-
-
 }
