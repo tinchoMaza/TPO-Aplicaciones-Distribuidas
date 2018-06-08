@@ -47,11 +47,11 @@ public class ClienteDao {
 		}	
 	}
 
-	public Cliente buscarClienteByCuit(int cuit) throws ClienteException  {
+	public Cliente buscarClienteByDni(int dni) throws ClienteException  {
 		ClienteEntity ce = null;
 		Session session = sf.openSession();
-		Query query = session.createQuery("select c from ClienteEntity c where c.cuit=?");
-		query.setParameter(0, cuit);
+		Query query = session.createQuery("select c from ClienteEntity c where c.dni=?");
+		query.setParameter(0, dni);
 		ce = (ClienteEntity) query.uniqueResult();
 		if (ce == null) 
 			throw new ClienteException("Error al buscar el Cliente en la BD");

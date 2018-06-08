@@ -4,13 +4,16 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import entities.PedidoEntity;
+import entities.UbicacionEntity;
 import excepciones.PedidoException;
 import hibernate.HibernateUtil;
 import negocio.Pedido;
+import negocio.Ubicacion;
 
 public class PedidoDao {
 
@@ -81,18 +84,21 @@ public class PedidoDao {
 	@SuppressWarnings("unchecked")
 	public List<Pedido> buscarPedidosByEstado(String estado) throws PedidoException{
 		List<Pedido> devolver = new ArrayList<Pedido>();
-		List<PedidoEntity> aux = new ArrayList<PedidoEntity>();
 		Session s = sf.openSession();
 		s.beginTransaction();
-		aux = (List<PedidoEntity>)s.createQuery("Select p From PedidoEntity p where p.estado = ?").setString(0, estado).list();
+		Query query = s.createQuery("Select p From PedidoEntity p where p.estado = ?");
+		query.setParameter(0, estado);
+		List<PedidoEntity> aux = query.list();
 		if (aux != null) {
 			for(PedidoEntity ped : aux)
 				devolver.add(ped.toNegocio());
+			s.flush();
+			s.getTransaction().commit();
+			s.close();
 			return devolver;
 		}else{
 			throw new PedidoException("Error al buscar lista de pedidos en la BD");
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -113,6 +119,23 @@ public class PedidoDao {
 
 	}
 
-
-
+	public List<Pedido> buscarPedidosByEstadoPorOrden(String estado, int nroPedido) throws PedidoException {
+		List<Pedido> devolver = new ArrayList<Pedido>();
+		Session s = sf.openSession();
+		s.beginTransaction();
+		Query query = s.createQuery("Select p From PedidoEntity p where p.estado = ? and p.nroPedido>?");
+		query.setParameter(0, estado);
+		query.setParameter(1, nroPedido);
+		List<PedidoEntity> aux = query.list();
+		if (aux != null) {
+			for(PedidoEntity ped : aux)
+				devolver.add(ped.toNegocio());
+			s.flush();
+			s.getTransaction().commit();
+			s.close();
+			return devolver;
+		}else{
+			throw new PedidoException("Error al buscar lista de pedidos en la BD");
+		}
+	}
 }

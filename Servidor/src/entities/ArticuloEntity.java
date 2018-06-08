@@ -45,8 +45,8 @@ public class ArticuloEntity implements Serializable{
 	}
 	
 	public Articulo toNegocio() {
-		return new Articulo(this.getIdArticulo(),this.getNombre(), this.getCapacidadArticulo(), this.getCodBarras(), this.getDescripcion(),
-				this.getPresentacion(), this.getUnidadMedida(),this.getCantCompraFija(), this.getPrecioVentaUnitario());
+		return new Articulo(this.idArticulo,this.nombre, this.CapacidadArticulo, this.codBarras, this.descripcion,
+				this.presentacion, this.unidadMedida,this.cantCompraFija, this.precioVentaUnitario);
 	}
 
 

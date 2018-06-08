@@ -25,6 +25,7 @@ public class ItemOrdenDeCompraDao {
 			Session s = sf.openSession();
 			s.beginTransaction();
 			s.save(itemCompra.toEntity());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}else{

@@ -2,6 +2,8 @@ package negocio;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 import dao.UbicacionDao;
 import dto.ArticuloDTO;
 import dto.ArticuloDepositoDTO;
@@ -31,12 +33,17 @@ public class Ubicacion {
 		this.articulos = new ArrayList<ArticuloDeposito>();
 	}
 
-	public boolean estaDisponible(){
-		return this.estado.equals("LIBRE");
+	public boolean estaLibre(){
+		return this.estado.equals("DISPONIBLE");
 	}
 
-	public float capacidadDisponible(){
-		return capacidad-this.articulos.size();
+	public float getCapacidadDisponible(){
+		int disponible = capacidad;
+		for (ArticuloDeposito a : articulos) {
+			JOptionPane.showMessageDialog(null, "" + disponible + " - " + a.getArticulo().getCapacidadArticulo() + " - " + a.getArticulo().getNombre());
+			disponible -= a.getArticulo().getCapacidadArticulo();
+		}
+		return disponible;
 	}
 	public int getCantidadAlmacenada() {
 		return this.articulos.size();
@@ -58,13 +65,22 @@ public class Ubicacion {
 
 	public UbicacionEntity toEntity() {
 		UbicacionEntity aux = new UbicacionEntity();
-		aux.setArticulos(this.getArticulosEntity());
-		aux.setCapacidad(this.getCapacidad());
-		aux.setEstado(this.getEstado());
-		aux.setIdUbicacion(this.getIdUbicacion());
+		aux.setCapacidad(this.capacidad);
+		aux.setEstado(this.estado);
+		aux.setIdUbicacion(this.idUbicacion);
+		aux.setArticulos(this.getArticulosEntity(aux));
 		return aux;
 	}
 
+	public UbicacionEntity toEntity2() {
+		UbicacionEntity aux = new UbicacionEntity();
+		aux.setCapacidad(this.capacidad);
+		aux.setEstado(this.estado);
+		aux.setIdUbicacion(this.idUbicacion);
+		aux.setArticulos(new ArrayList<ArticuloDepositoEntity>());
+		return aux;
+	}
+	
 	public UbicacionDTO toDTO() {
 		UbicacionDTO aux = new UbicacionDTO();
 		aux.setArticulos(this.getArticulosDTO());
@@ -103,17 +119,27 @@ public class Ubicacion {
 	}
 
 	public Integer getLote() {
-		return this.articulos.get(0).getLote().getIdLote();
+		if (this.articulos.size()>0) 
+			return this.articulos.get(0).getLote().getIdLote();
+		else
+			return 0;
 	}
 
 	public List<ArticuloDeposito> getArticulos() {
 		return articulos;
 	}
 
-	private List<ArticuloDepositoEntity> getArticulosEntity() {
+	private List<ArticuloDepositoEntity> getArticulosEntity(UbicacionEntity aux) {
 		List<ArticuloDepositoEntity> list = new ArrayList<ArticuloDepositoEntity>();
 		for (ArticuloDeposito a : this.getArticulos()){
-			list.add(a.toEntity());
+			ArticuloDepositoEntity articulo = new ArticuloDepositoEntity();
+			articulo.setArticulo(a.getArticulo().toEntity());
+			articulo.setEstado(a.getEstado());
+			articulo.setIdArticuloDeposito(a.getIdArticuloDeposito());
+			articulo.setLote(a.getLote().toEntity());
+			articulo.setReservaIdPedido(a.getReservaIdPedido());
+			articulo.setUbicacion(aux);
+			list.add(articulo);
 		}
 		return list;
 	}
@@ -123,6 +149,10 @@ public class Ubicacion {
 			list.add(a.toDTO());
 		}
 		return list;
+	}
+
+	public void update() throws UbicacionException {
+		UbicacionDao.getInstancia().update(this);
 	}
 
 

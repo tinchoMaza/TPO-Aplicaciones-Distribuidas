@@ -66,11 +66,15 @@ public class UbicacionDao {
 
 	public List<Ubicacion> cargarUbicaciones() {
 		Session session = sf.openSession();
+		session.beginTransaction();
 		Query query = session.createQuery("select u from UbicacionEntity u");
 		List<UbicacionEntity> ubsent = query.list();
 		List<Ubicacion> ubicaciones = new ArrayList<Ubicacion>();
 		for(UbicacionEntity ue : ubsent)
 			ubicaciones.add(ue.toNegocio());
+		session.flush();
+		session.getTransaction().commit();
+		session.close();
 		return ubicaciones;
 	}
 

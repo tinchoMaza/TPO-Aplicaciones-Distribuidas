@@ -16,6 +16,7 @@ import hibernate.HibernateUtil;
 import negocio.Articulo;
 import negocio.Cliente;
 import negocio.ItemOrdenDePedido;
+import negocio.ItemPedido;
 import negocio.OrdenDePedido;
 
 public class OrdenDePedidoDao {
@@ -30,13 +31,14 @@ public class OrdenDePedidoDao {
 		return instancia;
 	}
 
-	public void save(OrdenDePedido op) throws OrdenDePedidoException{
+	public int save(OrdenDePedido op) throws OrdenDePedidoException{
 		if (op != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(op.toEntity());
+			int id = (Integer) s.save(op.toEntity());
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new OrdenDePedidoException("Error en el guardado de una orden de compra en la BD");
 		}
@@ -81,16 +83,16 @@ public class OrdenDePedidoDao {
 		}
 	}
 
-	public boolean existeOrdenPedido(Articulo articulo) throws OrdenDePedidoException {
-		boolean b = false;
+	public boolean existeOrdenPedido(Articulo articulo, int cantidad) throws OrdenDePedidoException {
 		List<OrdenDePedido> ords = this.cargarTodasOrdenPedido();
 		for (OrdenDePedido op : ords)
 			for (ItemOrdenDePedido item : op.getArticulos())
-				if (item.getArticulo().getIdArticulo() == articulo.getIdArticulo())
-					b = true;
-		return b;
+				for (ItemPedido ip : op.getPedido().getItemsPedido()) {
+					if (item.getArticulo().getIdArticulo() == articulo.getIdArticulo() && item.getArticulo().getIdArticulo() == ip.getArticulo().getIdArticulo() &&
+							(item.getCant() - ip.getCant()) >= cantidad)
+							return true;
+				}
+		return false;
 	}
-
-
 
 }

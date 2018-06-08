@@ -59,9 +59,7 @@ public class ArticuloDepositoEntity implements Serializable{
 	}
 
 
-	public ArticuloDepositoEntity(){
-		super();
-	}
+	public ArticuloDepositoEntity(){}
 
 
 	//GETTERS Y SETTERS

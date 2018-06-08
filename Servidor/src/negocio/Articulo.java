@@ -50,14 +50,14 @@ public class Articulo {
 	public ArticuloEntity toEntity(){
 		ArticuloEntity aux = new ArticuloEntity();
 		aux.setCantCompraFija(this.cantCompraFija);
-		aux.setCapacidadArticulo(this.getCapacidadArticulo());
-		aux.setCodBarras(this.getCodBarras());
-		aux.setDescripcion(this.getDescripcion());
-		aux.setIdArticulo(this.getIdArticulo());
-		aux.setNombre(this.getNombre());
-		aux.setPrecioVentaUnitario(this.getPrecioVentaUnitario());
-		aux.setPresentacion(this.getPresentacion());
-		aux.setUnidadMedida(this.getUnidadMedida());
+		aux.setCapacidadArticulo(this.CapacidadArticulo);
+		aux.setCodBarras(this.codBarras);
+		aux.setDescripcion(this.descripcion);
+		aux.setIdArticulo(this.idArticulo);
+		aux.setNombre(this.nombre);
+		aux.setPrecioVentaUnitario(this.precioVentaUnitario);
+		aux.setPresentacion(this.presentacion);
+		aux.setUnidadMedida(this.unidadMedida);
 		return aux;
 	}
 

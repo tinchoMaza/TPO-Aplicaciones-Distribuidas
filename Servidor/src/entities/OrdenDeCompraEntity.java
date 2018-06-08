@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
 
+import negocio.ItemOrdenDeCompra;
+import negocio.OrdenDeCompra;
+
 @Entity
 @Table(name="OrdenDeCompra")
 public class OrdenDeCompraEntity implements Serializable{
@@ -89,6 +92,27 @@ public class OrdenDeCompraEntity implements Serializable{
 
 	public void setItems(List<ItemOrdenDeCompraEntity> items) {
 		this.items = items;
+	}
+
+	public OrdenDeCompra toNegocio() {
+		OrdenDeCompra aux = new OrdenDeCompra(this.idOC,this.fecha,this.proveedor.toNegocio(),this.OP.toNegocio(),this.estado);
+		aux.setItems(this.getItemsNegocio(aux));
+		return aux;
+		
+	}
+
+	private List<ItemOrdenDeCompra> getItemsNegocio(OrdenDeCompra aux) {
+		List<ItemOrdenDeCompra> list = new ArrayList<ItemOrdenDeCompra>();
+		for (ItemOrdenDeCompraEntity it: this.getItems()) {
+			ItemOrdenDeCompra asd = new ItemOrdenDeCompra();
+			asd.setArticulo(it.getArticulo().toNegocio());
+			asd.setCantidad(it.getCantidad());
+			asd.setIdItemOC(it.getItemOC());
+			asd.setOc(aux);
+			asd.setPrecio(it.getPrecio());
+			list.add(asd);
+		}
+		return list;
 	}
 
 }

@@ -10,8 +10,10 @@ import dto.ItemPedidoDTO;
 import dto.PedidoDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
+import excepciones.OrdenDeCompraException;
 import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
+import excepciones.ProveedorException;
 import negocio.Articulo;
 import negocio.Cliente;
 import negocio.CuentaCorriente;
@@ -39,37 +41,37 @@ public class ControladorClientes {
 		misClientes.add(c);
 	}
 
-	public void borrarCliente(int cuit) throws ClienteException{
-		ClienteDao.getInstancia().delete(ClienteDao.getInstancia().buscarClienteByCuit(cuit));
+	public void borrarCliente(int dni) throws ClienteException{
+		ClienteDao.getInstancia().delete(ClienteDao.getInstancia().buscarClienteByDni(dni));
 		//Remueve de memoria
 		for(Cliente c : misClientes) {
-			if(c.getCuit() == cuit) {
+			if(c.getDni() == dni) {
 				misClientes.remove(c);
 				break;
 			}	
 		}
 	}
 
-	public ClienteDTO buscarClienteByCuit(int cuit) throws ClienteException{
+	public ClienteDTO buscarClienteByDni(int dni) throws ClienteException{
 		//Chequea en memoria
 		for (Cliente c : misClientes)
 		{
-		   if (c.getCuit() == cuit)
+		   if (c.getDni() == dni)
 		      return c.toDTO();
 		}
 		
 		Cliente cliente = null;
-		cliente = ClienteDao.getInstancia().buscarClienteByCuit(cuit);
+		cliente = ClienteDao.getInstancia().buscarClienteByDni(dni);
 		misClientes.add(cliente);
 		return cliente.toDTO();
 	}
 
-	public List<PedidoDTO> buscarPedidosByCliente(int cuit) throws PedidoException{
+	public List<PedidoDTO> buscarPedidosByCliente(int dni) throws PedidoException{
 		List<PedidoDTO> devolver = new ArrayList<PedidoDTO>();
 		//Chequea en memoria
 		for (Pedido p : pedidosRealizados)
 		{
-		   if (p.getCliente().getCuit() == cuit) {
+		   if (p.getCliente().getDni() == dni) {
 			   devolver.add(p.toDTO());
 		   }
 		}
@@ -78,7 +80,7 @@ public class ControladorClientes {
 			return devolver;
 		}else {
 			List<Pedido> pedidos = null;
-			pedidos = PedidoDao.getInstancia().buscarPedidosByCliente(cuit);
+			pedidos = PedidoDao.getInstancia().buscarPedidosByCliente(dni);
 			for(Pedido pedido : pedidos){
 				devolver.add(pedido.toDTO());
 				pedidosRealizados.add(pedido);
@@ -96,7 +98,7 @@ public class ControladorClientes {
 		return devolver;
 	}
 
-	public void autorizarPedido(boolean autorizado, PedidoDTO pedido) throws PedidoException, ArticuloException, OrdenDePedidoException{
+	public void autorizarPedido(boolean autorizado, PedidoDTO pedido) throws PedidoException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
 			Pedido p = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
 			if (autorizado == true)
 			{
@@ -117,7 +119,7 @@ public class ControladorClientes {
 
 
 
-	public void altaPedido(List<ItemPedidoDTO> itemsPedido, String estado, ClienteDTO clienteDTO, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws ClienteException, ArticuloException, PedidoException, OrdenDePedidoException{
+	public void altaPedido(List<ItemPedidoDTO> itemsPedido, String estado, ClienteDTO clienteDTO, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws ClienteException, ArticuloException, PedidoException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
 		if (itemsPedido.size()<=0)
 			throw new PedidoException("El pedido no tiene items asociados");
 		int id;
@@ -128,7 +130,7 @@ public class ControladorClientes {
 		float precioTotalBruto = 0;
 		float precioTotalFinal = 0;
 		Cliente cliente = null;
-		cliente = ClienteDao.getInstancia().buscarClienteByCuit(clienteDTO.getCuit());
+		cliente = ClienteDao.getInstancia().buscarClienteByDni(clienteDTO.getDni());
 		Pedido pedido = new Pedido(estado ,cliente, fechaGeneracion, fechaDespacho,fechaEntregaEsperada, fechaEntrega, precioTotalBruto, precioTotalFinal, formaDePago, calleDireccEnvio, nroDireccEnvio, localidadDireccEnvio, cpDirecEnvio);
 		id = pedido.save();
 		pedido.setNroPedido(id);
@@ -137,13 +139,9 @@ public class ControladorClientes {
 			Articulo articulo = null;
 			articulo = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
 			if (articulo != null){
-				pedido.nuevoItemPedido(item.getCant(),articulo);
-				
+				pedido.nuevoItemPedido(item.getCant(),articulo);		
 			}
 		}
-	
-		
-		autorizarPedido(true, pedido.toDTO());
-		
+		autorizarPedido(true, pedido.toDTO()); //no va a estar mas aca
 	}
 }

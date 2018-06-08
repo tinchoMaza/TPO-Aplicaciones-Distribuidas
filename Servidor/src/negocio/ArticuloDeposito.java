@@ -1,5 +1,7 @@
 package negocio;
 
+import javax.swing.JOptionPane;
+
 import dao.ArticuloDepositoDao;
 import dto.ArticuloDepositoDTO;
 import entities.ArticuloDepositoEntity;
@@ -30,7 +32,7 @@ public class ArticuloDeposito {
 		this.articulo = articulo;
 		this.estado = "DISPONIBLE";
 		this.lote = lote;
-		this.reservaIdPedido=0;
+		this.reservaIdPedido=null;
 	}
 
 
@@ -40,12 +42,12 @@ public class ArticuloDeposito {
 
 	public ArticuloDepositoEntity toEntity(){
 		ArticuloDepositoEntity aux = new ArticuloDepositoEntity();
-		aux.setArticulo(this.getArticulo().toEntity());
-		aux.setEstado(this.getEstado());
-		aux.setLote(this.getLote().toEntity());
-		aux.setUbicacion(this.getUbicacion().toEntity());
-		aux.setReservaIdPedido(this.getReservaIdPedido());
-		aux.setIdArticuloDeposito(this.idArticuloDeposito);
+		aux.setArticulo(this.articulo.toEntity());
+		aux.setEstado(this.estado);
+		aux.setLote(this.lote.toEntity());
+		aux.setUbicacion(this.ubicacion.toEntity2());
+		aux.setReservaIdPedido(this.reservaIdPedido);
+		//aux.setIdArticuloDeposito(this.idArticuloDeposito);
 		return aux;
 	}
 

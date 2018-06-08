@@ -19,6 +19,45 @@ public class OrdenDeCompra {
 	private OrdenDePedido ordenPedido;
 	private String estado;
 	private List<ItemOrdenDeCompra> items;
+	
+
+	public OrdenDeCompra(int idOc, Date fecha, Proveedor prov, OrdenDePedido ordenPedido, String estado,
+			List<ItemOrdenDeCompra> items) {
+		super();
+		this.idOc = idOc;
+		this.fecha = fecha;
+		this.prov = prov;
+		this.ordenPedido = ordenPedido;
+		this.estado = estado;
+		this.items = items;
+	}
+	
+	public OrdenDeCompra(int idOc, Date fecha, Proveedor prov, OrdenDePedido ordenPedido, String estado) {
+		super();
+		this.idOc = idOc;
+		this.fecha = fecha;
+		this.prov = prov;
+		this.ordenPedido = ordenPedido;
+		this.estado = estado;
+		this.items= new ArrayList<ItemOrdenDeCompra>();
+	}
+	
+
+	public OrdenDeCompra(Date fecha, Proveedor prov, OrdenDePedido ordenPedido, String estado) {
+		super();
+		this.fecha = fecha;
+		this.prov = prov;
+		this.ordenPedido = ordenPedido;
+		this.estado = estado;
+		this.items= new ArrayList<ItemOrdenDeCompra>();
+	}
+
+
+	public OrdenDeCompra() {
+		super();
+		this.items = new ArrayList <ItemOrdenDeCompra>();
+	}
+
 
 	public float total(){
 		float total = 0;
@@ -32,12 +71,13 @@ public class OrdenDeCompra {
 		this.estado=estado;
 	}
 
-	public void nuevoItemOC(ItemOrdenDeCompra itemOrdenDeCompra){
-		this.items.add(itemOrdenDeCompra);
+	public void nuevoItemOC(Articulo articulo, int cant, float precio) throws OrdenDeCompraException{
+		ItemOrdenDeCompra itemOC = new ItemOrdenDeCompra(this, articulo, cant, precio);
+		itemOC.save();
 	}
 	
-	public void save() throws ArticuloException, OrdenDeCompraException {
-		OrdenDeCompraDao.getInstancia().save(this);	
+	public int save() throws ArticuloException, OrdenDeCompraException {
+		return OrdenDeCompraDao.getInstancia().save(this);	
 	}
 
 	public void update() throws ArticuloException, OrdenDeCompraException{
@@ -48,10 +88,10 @@ public class OrdenDeCompra {
 		OrdenDeCompraEntity oc = new OrdenDeCompraEntity();
 		oc.setEstado(this.getEstado());
 		oc.setFecha(this.getFecha());
-		oc.setIdOC(this.getIdOc());
 		oc.setItems(this.getItemsEntity(oc));
 		oc.setOP(this.getOrdenPedido().toEntity());
 		oc.setProveedor(this.getProv().toEntity());
+		oc.setIdOC(this.getIdOc());
 		return oc;
 	}
 
@@ -114,6 +154,9 @@ public class OrdenDeCompra {
 
 	public List<ItemOrdenDeCompraEntity> getItemsEntity(OrdenDeCompraEntity oc) {
 		List<ItemOrdenDeCompraEntity> list = new ArrayList<ItemOrdenDeCompraEntity>();
+		if (this.getItems().isEmpty() || this.getItems() == null) {
+			return list;
+		}			
 		for (ItemOrdenDeCompra o: this.getItems()){
 			ItemOrdenDeCompraEntity aux = new ItemOrdenDeCompraEntity();
 			aux.setArticulo(o.getArticulo().toEntity());

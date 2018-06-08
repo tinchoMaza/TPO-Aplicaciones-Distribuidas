@@ -18,7 +18,7 @@ public class Test1 {
 
 		/*ClienteDTO cliente;
 		try {
-			cliente = BusinessDelegate.getInstancia().buscarClienteByCuit(23126864);
+			cliente = BusinessDelegate.getInstancia().buscarClienteByDni(12686);
 			System.out.println("El nombre del cliente es "+ cliente.getNombre());
 		} catch (ClienteException e) {
 			System.out.println(e.getMessage());

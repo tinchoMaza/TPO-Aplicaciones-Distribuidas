@@ -2,11 +2,16 @@ package dao;
 
 
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 
+import entities.ClienteEntity;
+import entities.OrdenDeCompraEntity;
+import excepciones.ClienteException;
 import excepciones.OrdenDeCompraException;
 import hibernate.HibernateUtil;
+import negocio.Cliente;
 import negocio.OrdenDeCompra;
 
 public class OrdenDeCompraDao {
@@ -20,13 +25,14 @@ public class OrdenDeCompraDao {
 		return instancia;
 	}
 
-	public void save(OrdenDeCompra oc) throws OrdenDeCompraException{
+	public int save(OrdenDeCompra oc) throws OrdenDeCompraException{
 		if (oc != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(oc.toEntity());
+			int id = (Integer) s.save(oc.toEntity());
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new OrdenDeCompraException("Error en el guardado de una orden de compra en la BD");
 		}
@@ -57,9 +63,15 @@ public class OrdenDeCompraDao {
 	}
 
 
-
-
-
-
-
+	public OrdenDeCompra buscarOPById(int id) throws OrdenDeCompraException  {
+		OrdenDeCompraEntity oc = null;
+		Session session = sf.openSession();
+		Query query = session.createQuery("select o from OrdenDeCompraEntity o where o.idOC=?");
+		query.setParameter(0, id);
+		oc = (OrdenDeCompraEntity) query.uniqueResult();
+		if (oc == null) 
+			throw new OrdenDeCompraException("Error al buscar la Orden de compra en la BD");
+		else
+			return oc.toNegocio();		
+	}
 }

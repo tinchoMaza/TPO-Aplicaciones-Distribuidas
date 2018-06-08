@@ -21,7 +21,7 @@ public class UbicacionEntity implements Serializable{
 	private String estado;
 	private int capacidad;
 	
-	@OneToMany (cascade = CascadeType.ALL, mappedBy = "ubicacion", fetch = FetchType.LAZY)
+	@OneToMany (cascade = CascadeType.MERGE, mappedBy = "ubicacion", fetch = FetchType.LAZY)
 	private List<ArticuloDepositoEntity> articulos;
 
 	public UbicacionEntity(String idUbicacion, String estado, int capacidad, List<ArticuloDepositoEntity> articulos) {

@@ -94,7 +94,7 @@ public class OrdenDePedidoEntity implements Serializable {
 
 	public OrdenDePedido toNegocio() {
 		OrdenDePedido op = new OrdenDePedido();
-		op.setPedido(null);
+		op.setPedido(this.pedido.toNegocio());
 		op.setEstado(this.estado);
 		for (ItemOrdenDePedidoEntity item : this.items) {
 			op.getArticulos().add(item.toNegocio(op));

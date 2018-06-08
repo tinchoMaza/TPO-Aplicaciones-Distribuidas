@@ -38,6 +38,7 @@ public class Proveedor {
 		this.descripcion = descripcion;
 		this.direccion = direccion;
 		this.telefonoContacto = telefonoContacto;
+		this.articulos = new ArrayList<Articulo>();
 	}
 
 	public ProveedorEntity toEntity() {
@@ -143,5 +144,6 @@ public class Proveedor {
 	public void setArticulos(List<Articulo> articulos) {
 		this.articulos = articulos;
 	}
+
 
 }

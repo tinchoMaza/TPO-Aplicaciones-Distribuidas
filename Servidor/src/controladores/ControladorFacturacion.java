@@ -61,7 +61,7 @@ public class ControladorFacturacion {
 		Date fecha = new Date();
 		Pedido pedidoNegocio = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
 		Cliente clienteNegocio = null;
-		clienteNegocio = ClienteDao.getInstancia().buscarClienteByCuit(pedido.getCliente().getCuit());
+		clienteNegocio = ClienteDao.getInstancia().buscarClienteByDni(pedido.getCliente().getDni());
 		Remito remito = new Remito(fecha, clienteNegocio, pedidoNegocio, null);
 		for(ItemPedidoDTO item : pedido.getItemsPedidoDTO()) {
 			Articulo art = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
@@ -84,7 +84,7 @@ public class ControladorFacturacion {
 
 	public float limiteCreditoDisponible(ClienteDTO clienteDTO) throws ClienteException{
 		float saldoDisponible = 0;
-		Cliente cliente = ClienteDao.getInstancia().buscarClienteByCuit(clienteDTO.getCuit());
+		Cliente cliente = ClienteDao.getInstancia().buscarClienteByDni(clienteDTO.getDni());
 		saldoDisponible = cliente.consultarSaldo();
 		return saldoDisponible;
 	}

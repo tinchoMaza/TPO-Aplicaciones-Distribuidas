@@ -47,6 +47,7 @@ public class ArticuloDepositoDao {
 			Session s = sf.openSession();
 			s.beginTransaction();
 			s.update(articulo.toEntity());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}else{

@@ -1,6 +1,7 @@
 package vista;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,24 +9,24 @@ import delegado.BusinessDelegate;
 import dto.ItemPedidoDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
+import excepciones.LoteException;
+import excepciones.OrdenDeCompraException;
 import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
+import excepciones.ProveedorException;
+import excepciones.UbicacionException;
 
 public class TestGeneracion {
 
-	public static void main(String[] args) {
-	/*	try {
-			BusinessDelegate.getInstancia().cargarTodasUbicacionesYArticulos();
-		} catch (RemoteException e2) {
-			e2.printStackTrace();
-		}*/
+	public static void main(String[] args) throws ProveedorException, OrdenDeCompraException {
+		
 		/****ALTA PEDIDO CON ITEMS QUE EXISTA STOCK DE TODO****/
 		
-		List<ItemPedidoDTO> misItems = new ArrayList<ItemPedidoDTO>();
+		/*List<ItemPedidoDTO> misItems = new ArrayList<ItemPedidoDTO>();
 		ItemPedidoDTO item = new ItemPedidoDTO ();
 		try {
 			item.setArticulo(BusinessDelegate.getInstancia().buscarArticuloById(1));
-			item.setCant(30);
+			item.setCant(8);
 			misItems.add(item);
 			try {
 				BusinessDelegate.getInstancia().altaPedido(misItems, "PENDIENTE", BusinessDelegate.getInstancia().buscarClienteByCuit(23126864), "FormaDePago", "Calle", 123, "Localidad", 1838);
@@ -44,9 +45,32 @@ public class TestGeneracion {
 		} catch (RemoteException | ArticuloException e1) {
 			System.out.println(e1.getMessage());
 		}
+*/
+		
 
-		
-		
+		try {
+			//setear idoc a la que figura en la bd
+			//int idOC=15;
+			BusinessDelegate.getInstancia().procesarOC(15);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PedidoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ArticuloException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UbicacionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 
 		

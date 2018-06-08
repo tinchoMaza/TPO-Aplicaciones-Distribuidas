@@ -2,6 +2,7 @@ package interfazRemota;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -14,24 +15,30 @@ import dto.UbicacionDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
 import excepciones.FacturaException;
+import excepciones.LoteException;
+import excepciones.OrdenDeCompraException;
 import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
+import excepciones.ProveedorException;
 import excepciones.RemitoException;
+import excepciones.UbicacionException;
 
 public interface InterfazRemota extends Remote {
 	
 	/*************************************************** CLIENTES ************************************************************************************/
 	
-	public abstract ClienteDTO buscarClienteByCuit(int cuit) throws RemoteException, ClienteException;
+	public abstract ClienteDTO buscarClienteByDni(int dni) throws RemoteException, ClienteException;
 	
 	public abstract float limiteCreditoDisponibleCliente(ClienteDTO clienteDTO) throws RemoteException, ClienteException;
 	
 	/*************************************************** PEDIDOS 
 	 * @throws ArticuloException 
 	 * @throws ClienteException 
-	 * @throws OrdenDePedidoException ************************************************************************************/
+	 * @throws OrdenDePedidoException 
+	 * @throws OrdenDeCompraException 
+	 * @throws ProveedorException ************************************************************************************/
 	
-	public abstract void altaPedido(List<ItemPedidoDTO> items, String estado, ClienteDTO cliente, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException;
+	public abstract void altaPedido(List<ItemPedidoDTO> items, String estado, ClienteDTO cliente, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException;
 	
 	public abstract void actualizarEstadoPedido(PedidoDTO pedidoDTO, String estado) throws RemoteException, PedidoException;
 	
@@ -65,4 +72,17 @@ public interface InterfazRemota extends Remote {
 	public abstract void cargarTodasUbicacionesYArticulos() throws RemoteException;
 
 	public abstract List<UbicacionDTO> getUbicaciones() throws RemoteException;
+	
+	
+	/***********************************************COMPRAS
+	 * @throws UbicacionException 
+	 * @throws OrdenDeCompraException 
+	 * @throws LoteException 
+	 * @throws ArticuloException 
+	 * @throws SQLException 
+	 * @throws PedidoException ***********************************************************************************************/
+	
+	public abstract void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException;
 }
+
+

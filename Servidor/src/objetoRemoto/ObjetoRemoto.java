@@ -5,6 +5,7 @@ import negocio.Articulo;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -17,11 +18,15 @@ import dto.UbicacionDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
 import excepciones.FacturaException;
+import excepciones.LoteException;
 import excepciones.OrdenDeCompraException;
 import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
+import excepciones.ProveedorException;
 import excepciones.RemitoException;
+import excepciones.UbicacionException;
 import controladores.ControladorClientes;
+import controladores.ControladorCompras;
 import controladores.ControladorDeposito;
 import controladores.ControladorDespacho;
 import controladores.ControladorFacturacion;
@@ -41,9 +46,9 @@ public class ObjetoRemoto extends UnicastRemoteObject implements InterfazRemota 
 	
 	
 
-	public ClienteDTO buscarClienteByCuit(int cuit) throws RemoteException, ClienteException {
+	public ClienteDTO buscarClienteByDni(int dni) throws RemoteException, ClienteException {
 		
-		return ControladorClientes.getInstancia().buscarClienteByCuit(cuit);
+		return ControladorClientes.getInstancia().buscarClienteByDni(dni);
 	}
 	
 	public List<PedidoDTO> buscarPedidosByCliente(int cuitCliente) throws RemoteException, PedidoException {
@@ -58,12 +63,14 @@ public class ObjetoRemoto extends UnicastRemoteObject implements InterfazRemota 
 	/********************************************* PEDIDOS 
 	 * @throws ArticuloException 
 	 * @throws ClienteException 
-	 * @throws OrdenDePedidoException *********************************************/
+	 * @throws OrdenDePedidoException 
+	 * @throws OrdenDeCompraException 
+	 * @throws ProveedorException *********************************************/
 	
 	
 	
 	public void altaPedido(List<ItemPedidoDTO> items, String estado, ClienteDTO cliente, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio)
-			throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException {
+			throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException {
 				ControladorClientes.getInstancia().altaPedido(items, estado, cliente, formaDePago, calleDireccEnvio, nroDireccEnvio, localidadDireccEnvio, cpDirecEnvio);
 			}
 
@@ -126,6 +133,21 @@ public class ObjetoRemoto extends UnicastRemoteObject implements InterfazRemota 
 
 	public List<UbicacionDTO> getUbicaciones() {
 		return ControladorDeposito.getInstancia().getUbicaciones();
+	}
+
+
+
+	/**************************************************************************COMPRAS
+	 * @throws UbicacionException 
+	 * @throws OrdenDeCompraException 
+	 * @throws LoteException 
+	 * @throws ArticuloException 
+	 * @throws SQLException 
+	 * @throws PedidoException ***********************************************************************************************************************************************************************************************************************************************************************************************/
+	@Override
+	public void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException {
+		ControladorCompras.getInstancia().procesarOC(idOC);
+		
 	}
 
 }

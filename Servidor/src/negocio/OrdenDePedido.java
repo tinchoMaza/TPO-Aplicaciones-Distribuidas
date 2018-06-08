@@ -10,6 +10,7 @@ import entities.ItemOrdenDePedidoEntity;
 import entities.OrdenDeCompraEntity;
 import entities.OrdenDePedidoEntity;
 import excepciones.OrdenDePedidoException;
+import excepciones.PedidoException;
 
 public class OrdenDePedido {
 
@@ -52,9 +53,6 @@ public class OrdenDePedido {
 		aux.setOrdenesDeCompra(this.getOrdenesDeCompraEntity(aux));
 		return aux;
 	}
-	
-		
-	
 
 	public OrdenDePedidoDTO toDTO() {
 		OrdenDePedidoDTO aux = new OrdenDePedidoDTO();
@@ -67,8 +65,8 @@ public class OrdenDePedido {
 	}
 
 
-	public void save() throws OrdenDePedidoException {
-		OrdenDePedidoDao.getInstancia().save(this);
+	public int save() throws OrdenDePedidoException {
+		return OrdenDePedidoDao.getInstancia().save(this);
 	}
 
 	//Getters y Setters
@@ -162,6 +160,12 @@ public class OrdenDePedido {
 
 	public void setArticulos(List<ItemOrdenDePedido> articulos) {
 		this.articulos = articulos;
+	}
+
+	public void nuevoItemOP(Articulo a, int cantidadAComprar) throws PedidoException {
+		ItemOrdenDePedido it = new ItemOrdenDePedido(this,a,cantidadAComprar);
+		this.articulos.add(it);
+		//it.save();
 	}
 
 

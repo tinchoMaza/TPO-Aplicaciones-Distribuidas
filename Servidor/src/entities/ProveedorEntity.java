@@ -4,6 +4,8 @@ import java.util.*;
 import java.io.*;
 import javax.persistence.*;
 
+import negocio.Proveedor;
+
 @Entity
 @Table (name = "Proveedor")
 
@@ -95,6 +97,10 @@ public class ProveedorEntity implements Serializable{
 
 	public void setArticulos(List<ArticuloEntity> articulos) {
 		this.articulos = articulos;
+	}
+
+	public Proveedor toNegocio() {
+		return new Proveedor(this.idProv, this.nombre, this.cuit, this.descripcion, this.direccion, this.telefonoContacto);
 	}
 	
 }

@@ -71,7 +71,7 @@ public class ItemOrdenDePedidoEntity implements Serializable{
 	}
 
 	public ItemOrdenDePedido toNegocio(OrdenDePedido p) {
-		return new ItemOrdenDePedido(p, this.getArticulo().toNegocio(), this.getCant());
+		return new ItemOrdenDePedido(p, this.articulo.toNegocio(), this.cant);
 	}	
 
 }

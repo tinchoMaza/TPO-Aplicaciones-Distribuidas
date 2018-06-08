@@ -1,7 +1,9 @@
 package negocio;
 
+import dao.ItemOrdenDeCompraDao;
 import dto.ItemOrdenDeCompraDTO;
 import entities.ItemOrdenDeCompraEntity;
+import excepciones.OrdenDeCompraException;
 
 public class ItemOrdenDeCompra {
 
@@ -11,13 +13,16 @@ public class ItemOrdenDeCompra {
 	private int cantidad;
 	private float precio;
 
-	public ItemOrdenDeCompra(OrdenDeCompra oc, int idItemOC, Articulo articulo, int cantidad, float precio) {
+	public ItemOrdenDeCompra(OrdenDeCompra oc, Articulo articulo, int cantidad, float precio) {
 		super();
-		Oc = oc;
-		this.idItemOC = idItemOC;
+		this.Oc = oc;
 		this.articulo = articulo;
 		this.cantidad = cantidad;
 		this.precio = precio;
+	}
+
+	public ItemOrdenDeCompra() {
+		super();
 	}
 
 	public float subtotal() {
@@ -29,7 +34,6 @@ public class ItemOrdenDeCompra {
 		aux.setArticulo(this.getArticulo().toEntity());
 		aux.setCantidad(this.getCantidad());
 		aux.setOc(this.getOc().toEntity());
-		aux.setItemOC(this.getIdItemOC());
 		aux.setPrecio(this.getPrecio());
 		return aux;
 	}
@@ -88,7 +92,8 @@ public class ItemOrdenDeCompra {
 		this.precio = precio;
 	}
 
-
-
-
+	public void save() throws OrdenDeCompraException {
+		ItemOrdenDeCompraDao.getInstancia().save(this);
+		
+	}
 }
