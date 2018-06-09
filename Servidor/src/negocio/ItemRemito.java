@@ -1,10 +1,8 @@
 package negocio;
 
-import dao.ItemPedidoDao;
 import dao.ItemRemitoDao;
 import dto.ItemRemitoDTO;
 import entities.ItemRemitoEntity;
-import excepciones.PedidoException;
 import excepciones.RemitoException;
 
 public class ItemRemito {
@@ -33,16 +31,26 @@ public class ItemRemito {
 		this.precio = precio;
 	}
 
-
-	public ItemRemitoEntity toEntity() {
+	public ItemRemitoEntity toEntitySave() {
 		ItemRemitoEntity aux = new ItemRemitoEntity();
-		aux.setArticulo(this.getArticulo().toEntity());
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
+		aux.setCantidad(this.getCant());
+		aux.setPrecio(this.getPrecio());
+		aux.setRemito(this.getRemito().toEntityUpdate());
+		return aux;
+	}
+
+
+	public ItemRemitoEntity toEntityUpdate() {
+		ItemRemitoEntity aux = new ItemRemitoEntity();
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
 		aux.setCantidad(this.getCant());
 		aux.setIdItemRemito(this.getIdItemRemito());
 		aux.setPrecio(this.getPrecio());
-		aux.setRemito(this.getRemito().toEntity());
+		aux.setRemito(this.getRemito().toEntityUpdate());
 		return aux;
 	}
+	
 
 
 	public ItemRemitoDTO toDTO() {
@@ -56,8 +64,8 @@ public class ItemRemito {
 	}
 
 	
-	public void save() throws RemitoException  {
-		ItemRemitoDao.getInstancia().save(this);;
+	public int save() throws RemitoException  {
+		return ItemRemitoDao.getInstancia().save(this);
 
 	}
 

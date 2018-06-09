@@ -142,7 +142,16 @@ public class Pedido {
 	}
 
 
-	public PedidoEntity toEntity() {
+	public PedidoEntity toEntitySave() {
+		PedidoEntity aux = new PedidoEntity(this.getEstado(), this.getFechaGeneracion(), 
+				this.getFechaDespacho(),this.getFechaEntregaEsperada(), this.getFechaEntrega(), 
+				this.getPrecioTotalBruto(), this.getPrecioTotalFinal(), this.getFormaDePago(), 
+				this.getCalleDireccEnvio(), this.getNroDireccEnvio(), 
+				this.getLocalidadDireccEnvio(), this.getCpDirecEnvio(), this.getCliente().toEntity(), this.getItemsPedidoEntity() );
+		return aux;
+	}
+	
+	public PedidoEntity toEntityUpdate() {
 		PedidoEntity aux = new PedidoEntity(this.getNroPedido(), this.getEstado(), this.getFechaGeneracion(), 
 				this.getFechaDespacho(),this.getFechaEntregaEsperada(), this.getFechaEntrega(), 
 				this.getPrecioTotalBruto(), this.getPrecioTotalFinal(), this.getFormaDePago(), 
@@ -150,6 +159,7 @@ public class Pedido {
 				this.getLocalidadDireccEnvio(), this.getCpDirecEnvio(), this.getCliente().toEntity(), this.getItemsPedidoEntity() );
 		return aux;
 	}
+
 
 
 	public PedidoDTO toDTO() {	
@@ -284,7 +294,7 @@ public class Pedido {
 		List<ItemPedidoEntity> items = new ArrayList<ItemPedidoEntity>();
 		ItemPedidoEntity aux = new ItemPedidoEntity();
 		for (ItemPedido it: itemsPedido) {
-			aux.setArticulo(it.getArticulo().toEntity());
+			aux.setArticulo(it.getArticulo().toEntityUpdate());
 			aux.setCantidad(it.getCant());
 			aux.setIdItemPedido(it.getIdItemPedido());
 			PedidoEntity pedentity = new PedidoEntity(it.getPedido().getNroPedido(), it.getPedido().getEstado(), it.getPedido().getFechaGeneracion(), 
@@ -324,7 +334,9 @@ public class Pedido {
 
 	public void nuevoItemPedido(int cant, Articulo articulo) throws PedidoException {
 		ItemPedido item = new ItemPedido(this, cant, articulo);
-		item.save();
+		int id = item.save();
+		item.setIdItemPedido(id);
+		this.itemsPedido.add(item);
 	}
 
 }

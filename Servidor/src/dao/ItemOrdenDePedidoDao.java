@@ -1,9 +1,7 @@
 package dao;
 
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
 import excepciones.PedidoException;
 import hibernate.HibernateUtil;
 import negocio.ItemOrdenDePedido;
@@ -25,7 +23,7 @@ public class ItemOrdenDePedidoDao {
 		if (itemOP != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			int id = (Integer) s.save(itemOP.toEntity());
+			int id = (Integer) s.save(itemOP.toEntitySave());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();

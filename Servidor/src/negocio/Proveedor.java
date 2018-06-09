@@ -127,7 +127,7 @@ public class Proveedor {
 	public List<ArticuloEntity> getArticulosEntity() {
 		List<ArticuloEntity> list = new ArrayList<ArticuloEntity>();
 		for (Articulo a: this.getArticulos()){
-			list.add(a.toEntity());
+			list.add(a.toEntityUpdate());
 		}
 		return list;
 	}

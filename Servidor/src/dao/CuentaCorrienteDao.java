@@ -4,12 +4,9 @@ package dao;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-
 import entities.CuentaCorrienteEntity;
 import excepciones.CuentaCorrienteException;
 import hibernate.HibernateUtil;
-
 import negocio.CuentaCorriente;
 
 public class CuentaCorrienteDao {
@@ -29,7 +26,7 @@ public class CuentaCorrienteDao {
 		if (cuentaCorriente!=null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.save(cuentaCorriente);
+			session.save(cuentaCorriente.toEntitySave());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -43,7 +40,7 @@ public class CuentaCorrienteDao {
 		if (cuentaCorriente!=null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(cuentaCorriente.toEntity());
+			s.update(cuentaCorriente.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}

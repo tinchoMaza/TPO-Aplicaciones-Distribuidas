@@ -1,6 +1,5 @@
 package dao;
 
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -21,13 +20,15 @@ public class RemitoDao {
 	}
 
 
-	public void save(Remito remito) throws RemitoException{
+	public int save(Remito remito) throws RemitoException{
 		if (remito != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(remito.toEntity());
+			int id = (Integer) s.save(remito.toEntitySave());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new RemitoException("Error al buscar pedido en la BD");
 		}
@@ -37,7 +38,7 @@ public class RemitoDao {
 		if (remito != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(remito.toEntity());
+			s.update(remito.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -49,7 +50,7 @@ public class RemitoDao {
 		if (remito != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.delete(remito.toEntity());
+			s.delete(remito.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{

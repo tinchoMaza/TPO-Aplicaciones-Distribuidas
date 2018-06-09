@@ -2,20 +2,12 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
-import entities.ClienteEntity;
-import entities.RemitoEntity;
 import entities.UbicacionEntity;
-import excepciones.ClienteException;
-import excepciones.RemitoException;
 import excepciones.UbicacionException;
 import hibernate.HibernateUtil;
-import negocio.Remito;
 import negocio.Ubicacion;
 
 public class UbicacionDao {
@@ -47,7 +39,7 @@ public class UbicacionDao {
 		if (ubicacion != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(ubicacion.toEntity());
+			s.update(ubicacion.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -72,6 +64,7 @@ public class UbicacionDao {
 		Session session = sf.openSession();
 		session.beginTransaction();
 		Query query = session.createQuery("select u from UbicacionEntity u");
+		@SuppressWarnings("unchecked")
 		List<UbicacionEntity> ubsent = query.list();
 		List<Ubicacion> ubicaciones = new ArrayList<Ubicacion>();
 		for(UbicacionEntity ue : ubsent)

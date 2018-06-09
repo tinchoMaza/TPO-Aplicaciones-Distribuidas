@@ -29,11 +29,21 @@ public class ItemOrdenDeCompra {
 		return cantidad * precio;
 	}
 
-	public ItemOrdenDeCompraEntity toEntity() {
+	public ItemOrdenDeCompraEntity toEntitySave() {
 		ItemOrdenDeCompraEntity aux = new ItemOrdenDeCompraEntity();
-		aux.setArticulo(this.getArticulo().toEntity());
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
 		aux.setCantidad(this.getCantidad());
-		aux.setOc(this.getOc().toEntity());
+		aux.setOc(this.getOc().toEntityUpdate());
+		aux.setPrecio(this.getPrecio());
+		return aux;
+	}
+	
+	public ItemOrdenDeCompraEntity toEntityUpdate() {
+		ItemOrdenDeCompraEntity aux = new ItemOrdenDeCompraEntity();
+		aux.setItemOC(this.getIdItemOC());
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
+		aux.setCantidad(this.getCantidad());
+		aux.setOc(this.getOc().toEntityUpdate());
 		aux.setPrecio(this.getPrecio());
 		return aux;
 	}
@@ -92,8 +102,8 @@ public class ItemOrdenDeCompra {
 		this.precio = precio;
 	}
 
-	public void save() throws OrdenDeCompraException {
-		ItemOrdenDeCompraDao.getInstancia().save(this);
+	public int save() throws OrdenDeCompraException {
+		return ItemOrdenDeCompraDao.getInstancia().save(this);
 		
 	}
 }

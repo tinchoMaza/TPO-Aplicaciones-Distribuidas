@@ -1,11 +1,9 @@
 package negocio;
 
-import javax.swing.JOptionPane;
 
 import dao.ArticuloDepositoDao;
 import dto.ArticuloDepositoDTO;
 import entities.ArticuloDepositoEntity;
-import entities.LoteEntity;
 import excepciones.ArticuloException;
 
 public class ArticuloDeposito {
@@ -41,22 +39,22 @@ public class ArticuloDeposito {
 		super();
 	}
 
-	public ArticuloDepositoEntity toEntity(){
+	public ArticuloDepositoEntity toEntitySave(){
 		ArticuloDepositoEntity aux = new ArticuloDepositoEntity();
-		aux.setArticulo(this.articulo.toEntity());
+		aux.setArticulo(this.articulo.toEntityUpdate());
 		aux.setEstado(this.estado);
-		aux.setLote(this.lote.toEntity2());
+		aux.setLote(this.lote.toEntityUpdate());
 		aux.setUbicacion(this.ubicacion.toEntity());
 		aux.setReservaIdPedido(this.reservaIdPedido);
 		//aux.setIdArticuloDeposito(this.idArticuloDeposito);
 		return aux;
 	}
 
-	public ArticuloDepositoEntity toEntity2(){
+	public ArticuloDepositoEntity toEntityUpdate(){
 		ArticuloDepositoEntity aux = new ArticuloDepositoEntity();
-		aux.setArticulo(this.articulo.toEntity());
+		aux.setArticulo(this.articulo.toEntityUpdate());
 		aux.setEstado(this.estado);
-		aux.setLote(this.lote.toEntity2());
+		aux.setLote(this.lote.toEntityUpdate());
 		aux.setUbicacion(this.ubicacion.toEntity());
 		aux.setReservaIdPedido(this.reservaIdPedido);
 		aux.setIdArticuloDeposito(this.idArticuloDeposito);

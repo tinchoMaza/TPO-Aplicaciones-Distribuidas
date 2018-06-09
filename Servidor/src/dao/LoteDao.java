@@ -1,11 +1,8 @@
 package dao;
 
-import javax.swing.JOptionPane;
 
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
 import excepciones.LoteException;
 import hibernate.HibernateUtil;
 import negocio.Lote;
@@ -27,7 +24,7 @@ public class LoteDao {
 		if (lote != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			Integer id = (Integer) s.save(lote.toEntity());
+			Integer id = (Integer) s.save(lote.toEntitySave());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();
@@ -41,7 +38,8 @@ public class LoteDao {
 		if (lote != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(lote.toEntity());
+			s.update(lote.toEntityUpdate());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -54,7 +52,7 @@ public class LoteDao {
 		if (lote != null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(lote.toEntity());
+			session.delete(lote.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();

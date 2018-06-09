@@ -90,6 +90,28 @@ public class PedidoEntity implements Serializable{
 		this.itemsPedido = items;
 	}
 	
+	public PedidoEntity( String estado, Date fechaGeneracion, 
+			Date fechaDespacho,	Date fechaEntregaEsperada, Date fechaEntrega, 
+			float precioTotalBruto, float precioTotalFinal, String formaDePago, 
+			String calleDireccEnvio, int nroDireccEnvio, 
+			String localidadDireccEnvio, int cpDirecEnvio, ClienteEntity cliente, List<ItemPedidoEntity> items) {
+		super();
+		this.estado = estado;
+		this.fechaGeneracion = fechaGeneracion;
+		this.fechaDespacho = fechaDespacho;
+		this.fechaEntregaEsperada = fechaEntregaEsperada;
+		this.fechaEntrega = fechaEntrega;
+		this.precioTotalBruto = precioTotalBruto;
+		this.precioTotalFinal = precioTotalFinal;
+		this.formaDePago = formaDePago;
+		this.calleDireccEnvio = calleDireccEnvio;
+		this.nroDireccEnvio = nroDireccEnvio;
+		this.localidadDireccEnvio = localidadDireccEnvio;
+		this.cpDirecEnvio = cpDirecEnvio;
+		this.cliente = cliente;
+		this.itemsPedido = items;
+	}
+	
 	public Pedido toNegocio() {
 		Pedido p = new Pedido(this.nroPedido, this.estado, this.fechaGeneracion, this.fechaDespacho,
 				this.fechaEntregaEsperada, this.fechaEntrega, this.precioTotalBruto, this.precioTotalFinal,

@@ -35,11 +35,21 @@ public class ItemOrdenDePedido {
 	}
 
 
-	public ItemOrdenDePedidoEntity toEntity() {
+	public ItemOrdenDePedidoEntity toEntitySave() {
 		ItemOrdenDePedidoEntity aux = new ItemOrdenDePedidoEntity();
-		aux.setArticulo(this.getArticulo().toEntity());
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
 		aux.setCant(this.getCant());
-		aux.setOp(this.getOp().toEntity());
+		aux.setOp(this.getOp().toEntityUpdate());
+		return aux;
+
+	}
+	
+	public ItemOrdenDePedidoEntity toEntityUpdate() {
+		ItemOrdenDePedidoEntity aux = new ItemOrdenDePedidoEntity();
+		aux.setIdItemOp(this.getIdItemOp());
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
+		aux.setCant(this.getCant());
+		aux.setOp(this.getOp().toEntityUpdate());
 		return aux;
 
 	}

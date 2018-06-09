@@ -21,9 +21,8 @@ public class Factura {
 	private String estado;
 	private List<ItemFactura> itemsFact;
 
-	public Factura(int nroFactura, Date fecha, Pedido pedido, Cliente cliente, float totalFact, String estado) {
+	public Factura(Date fecha, Pedido pedido, Cliente cliente, float totalFact, String estado) {
 		super();
-		this.nroFactura = nroFactura;
 		this.fecha = fecha;
 		this.pedido = pedido;
 		this.cliente = cliente;
@@ -51,8 +50,11 @@ public class Factura {
 	public float totalFactura(){
 		return 123456;
 	}
-	public void nuevoItemFact(Articulo articulo, int cant, float precio){		
-		itemsFact.add(new ItemFactura(this,cant, articulo ,precio, this.getNroFactura()));
+	public void nuevoItemFact(Articulo articulo, int cant, float precio) throws FacturaException{	
+		ItemFactura item = new ItemFactura(this,cant, articulo ,precio, this.getNroFactura());
+		int id = item.save();
+		item.setIdItemFact(id);
+		itemsFact.add(item);
 	}
 
 	public void pagar() throws FacturaException{
@@ -63,8 +65,8 @@ public class Factura {
 			throw new FacturaException("La factura ya se encuentra paga");
 	}
 
-	public void save() throws FacturaException {
-		FacturaDao.getInstancia().save(this);
+	public int save() throws FacturaException {
+		return FacturaDao.getInstancia().save(this);
 
 	}
 
@@ -73,17 +75,30 @@ public class Factura {
 	}
 
 
-	public FacturaEntity toEntity(){
+	public FacturaEntity toEntityUpdate(){
 		FacturaEntity aux = new FacturaEntity();
 		aux.setCliente(this.getCliente().toEntity());
 		aux.setEstado(this.getEstado());
 		aux.setFecha(this.getFecha());
 		aux.setItems(this.getItemsFactEntity());
 		aux.setNroFactura(this.getNroFactura());
-		aux.setPedido(this.getPedido().toEntity());
+		aux.setPedido(this.getPedido().toEntityUpdate());
 		aux.setTotalFact(this.getTotalFact());
 		return aux;
 	}
+	
+	
+	public FacturaEntity toEntitySave(){
+		FacturaEntity aux = new FacturaEntity();
+		aux.setCliente(this.getCliente().toEntity());
+		aux.setEstado(this.getEstado());
+		aux.setFecha(this.getFecha());
+		aux.setItems(this.getItemsFactEntity());
+		aux.setPedido(this.getPedido().toEntityUpdate());
+		aux.setTotalFact(this.getTotalFact());
+		return aux;
+	}
+	
 
 
 	public FacturaDTO toDTO (){
@@ -140,7 +155,7 @@ public class Factura {
 		List<ItemFacturaEntity> aux = new ArrayList<ItemFacturaEntity>();
 		for(ItemFactura item: itemsFact)
 		{
-			aux.add(item.toEntity());
+			aux.add(item.toEntityUpdate());
 		}
 		return aux;
 

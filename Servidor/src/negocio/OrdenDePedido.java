@@ -47,8 +47,15 @@ public class OrdenDePedido {
 		this.estado = estado;
 	}
 
-	public OrdenDePedidoEntity toEntity(){
-		OrdenDePedidoEntity aux = new OrdenDePedidoEntity(this.getIdOp(), this.getPedido().toEntity(), this.getEstado());
+	public OrdenDePedidoEntity toEntitySave(){
+		OrdenDePedidoEntity aux = new OrdenDePedidoEntity(this.getPedido().toEntityUpdate(), this.getEstado());
+		aux.setItems(this.getArticulosEntity(aux));
+		aux.setOrdenesDeCompra(this.getOrdenesDeCompraEntity(aux));
+		return aux;
+	}
+	
+	public OrdenDePedidoEntity toEntityUpdate(){
+		OrdenDePedidoEntity aux = new OrdenDePedidoEntity(this.getIdOp(), this.getPedido().toEntityUpdate(), this.getEstado());
 		aux.setItems(this.getArticulosEntity(aux));
 		aux.setOrdenesDeCompra(this.getOrdenesDeCompraEntity(aux));
 		return aux;
@@ -139,7 +146,7 @@ public class OrdenDePedido {
 		List<ItemOrdenDePedidoEntity> list = new ArrayList<ItemOrdenDePedidoEntity>();
 		for (ItemOrdenDePedido p: this.getArticulos()){
 				ItemOrdenDePedidoEntity itop = new ItemOrdenDePedidoEntity();
-				itop.setArticulo(p.getArticulo().toEntity());
+				itop.setArticulo(p.getArticulo().toEntityUpdate());
 				itop.setCant(p.getCant());
 				itop.setIdItemOp(p.getIdItemOp());
 				itop.setOp(aux);

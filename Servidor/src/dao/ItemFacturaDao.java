@@ -1,16 +1,9 @@
 package dao;
 
 import hibernate.HibernateUtil;
-
-
-
 import negocio.ItemFactura;
-
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
-
 import excepciones.FacturaException;
 
 public class ItemFacturaDao {
@@ -26,13 +19,15 @@ public class ItemFacturaDao {
 		return instancia;
 	}
 
-	public void save(ItemFactura itemFactura) throws FacturaException{
+	public int save(ItemFactura itemFactura) throws FacturaException{
 		if (itemFactura != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(itemFactura.toEntity());
+			int id = (Integer) s.save(itemFactura.toEntitySave());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new FacturaException("Error al guardar un item de factura en la BD");
 		}
@@ -42,7 +37,7 @@ public class ItemFacturaDao {
 		if (itemFactura != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(itemFactura.toEntity());
+			s.update(itemFactura.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -55,7 +50,7 @@ public class ItemFacturaDao {
 		if (itemFactura != null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(itemFactura.toEntity());
+			session.delete(itemFactura.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();

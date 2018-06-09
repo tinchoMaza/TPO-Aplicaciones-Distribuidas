@@ -77,9 +77,13 @@ public class MovimientoCtaCte {
 	public void setCuentaCorriente(CuentaCorriente cuentaCorriente) {
 		this.cuentaCorriente = cuentaCorriente;
 	}
+	
+	public MovimientoCtaCteEntity toEntitySave() {
+		return new MovimientoCtaCteEntity(null, this.fecha, this.monto, this.descripcion);
+	}
 
-	public MovimientoCtaCteEntity toEntity() {
-		return new MovimientoCtaCteEntity(null, this.nroMov, this.fecha, this.monto, this.descripcion);
+	public MovimientoCtaCteEntity toEntityUpdate() {
+		return new MovimientoCtaCteEntity(null, this.nroMov, this.fecha, this.monto, this.descripcion); // aca se necesitara la cuenta corriente? 
 	}
 
 	public MovimientoCtaCteDTO toDTO() {		

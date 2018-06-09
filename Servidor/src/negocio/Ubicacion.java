@@ -1,17 +1,11 @@
 package negocio;
 
 import java.util.*;
-
-import javax.swing.JOptionPane;
-
 import dao.UbicacionDao;
-import dto.ArticuloDTO;
 import dto.ArticuloDepositoDTO;
 import dto.UbicacionDTO;
 import entities.ArticuloDepositoEntity;
-import entities.ArticuloEntity;
 import entities.UbicacionEntity;
-import excepciones.RemitoException;
 import excepciones.UbicacionException;
 
 public class Ubicacion {
@@ -24,7 +18,7 @@ public class Ubicacion {
 	public Ubicacion(String idUbicacion) {
 		super();
 		this.idUbicacion = idUbicacion;
-		this.estado = "LIBRE";
+		this.estado = "DISPONIBLE";
 		this.articulos = new ArrayList<ArticuloDeposito>();
 	}
 
@@ -72,7 +66,7 @@ public class Ubicacion {
 		return aux;
 	}
 
-	public UbicacionEntity toEntity2() {
+	public UbicacionEntity toEntityUpdate() {
 		UbicacionEntity aux = new UbicacionEntity();
 		aux.setCapacidad(this.capacidad);
 		aux.setEstado(this.estado);
@@ -133,10 +127,10 @@ public class Ubicacion {
 		List<ArticuloDepositoEntity> list = new ArrayList<ArticuloDepositoEntity>();
 		for (ArticuloDeposito a : this.getArticulos()){
 			ArticuloDepositoEntity articulo = new ArticuloDepositoEntity();
-			articulo.setArticulo(a.getArticulo().toEntity());
+			articulo.setArticulo(a.getArticulo().toEntityUpdate());
 			articulo.setEstado(a.getEstado());
 			articulo.setIdArticuloDeposito(a.getIdArticuloDeposito());
-			articulo.setLote(a.getLote().toEntity());
+			articulo.setLote(a.getLote().toEntityUpdate());
 			articulo.setReservaIdPedido(a.getReservaIdPedido());
 			articulo.setUbicacion(aux);
 			list.add(articulo);

@@ -43,6 +43,16 @@ public class CuentaCorrienteEntity implements Serializable{
 		this.saldo = saldo;
 		this.movimientos = new ArrayList<MovimientoCtaCteEntity>();
 	}
+	
+	public CuentaCorrienteEntity(Date fecha, String especie, float saldo) {
+		super();
+		this.fecha = fecha;
+		this.especie = especie;
+		this.saldo = saldo;
+		this.movimientos = new ArrayList<MovimientoCtaCteEntity>();
+	}
+
+
 
 	public CuentaCorriente toNegocio() {
 		CuentaCorriente ctaCte = new CuentaCorriente();

@@ -9,7 +9,8 @@ import negocio.MovimientoDaño;
 @DiscriminatorValue("DAÑO")
 
 public class MovimientoDañoEntity extends MovimientoEntity{
-	
+
+	private static final long serialVersionUID = 7616669139282081664L;
 	private String destino;
 	private String encargado;
 	private String autorizante;

@@ -3,14 +3,11 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
 import entities.FacturaEntity;
 import excepciones.FacturaException;
 import hibernate.HibernateUtil;
-
 import negocio.Factura;
 
 public class FacturaDao {
@@ -29,14 +26,9 @@ public class FacturaDao {
 
 	public int save(Factura factura) throws FacturaException{
 		if (factura != null){
-			FacturaEntity aux = new FacturaEntity();
-			aux.setCliente(factura.getCliente().toEntity());
-			aux.setEstado(factura.getEstado());
-			aux.setFecha(factura.getFecha());
-			aux.setPedido(factura.getPedido().toEntity());
 			Session s = sf.openSession();
 			s.beginTransaction();
-			int nroFactura = (Integer) s.save(aux);
+			int nroFactura = (Integer) s.save(factura.toEntitySave());
 			s.getTransaction().commit();
 			s.close();
 			return nroFactura;
@@ -45,6 +37,7 @@ public class FacturaDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Factura> buscarFacturasByEstado(String estado) throws FacturaException{
 		List<FacturaEntity> aux = new ArrayList<FacturaEntity>();
 		List<Factura> devolver = new ArrayList<Factura>();
@@ -74,7 +67,7 @@ public class FacturaDao {
 
 	public void update(Factura factura) throws FacturaException {
 		if (factura != null){
-			FacturaEntity aux = factura.toEntity();
+			FacturaEntity aux = factura.toEntityUpdate();
 			Session s = sf.openSession();
 			s.beginTransaction();
 			s.update(aux);
@@ -89,7 +82,7 @@ public class FacturaDao {
 		if (factura != null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(factura.toEntity());
+			session.delete(factura.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();

@@ -1,9 +1,7 @@
 package dao;
 
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
 import excepciones.OrdenDeCompraException;
 import hibernate.HibernateUtil;
 import negocio.ItemOrdenDeCompra;
@@ -21,14 +19,15 @@ public class ItemOrdenDeCompraDao {
 		return instancia;
 	}
 
-	public void save(ItemOrdenDeCompra itemCompra) throws OrdenDeCompraException{
+	public int save(ItemOrdenDeCompra itemCompra) throws OrdenDeCompraException{
 		if (itemCompra != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(itemCompra.toEntity());
+			int id = (Integer) s.save(itemCompra.toEntitySave());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();
+			return id;
 		}else{
 			throw new OrdenDeCompraException("Error al guardar un item de orden de compra en la BD");
 		}
@@ -38,7 +37,7 @@ public class ItemOrdenDeCompraDao {
 		if (itemCompra != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(itemCompra.toEntity());
+			s.update(itemCompra.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -51,7 +50,7 @@ public class ItemOrdenDeCompraDao {
 		if (itemCompra != null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(itemCompra.toEntity());
+			session.delete(itemCompra.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();

@@ -1,21 +1,12 @@
 package dao;
 
 import hibernate.HibernateUtil;
-
-
-
 import negocio.Articulo;
-import negocio.Cliente;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
 import entities.ArticuloEntity;
-import entities.ClienteEntity;
 import excepciones.ArticuloException;
-import excepciones.ClienteException;
-
 
 public class ArticuloDao {
 
@@ -34,7 +25,7 @@ public class ArticuloDao {
 			SessionFactory sf = HibernateUtil.getSessionFactory();
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.save(articulo.toEntity());
+			s.save(articulo.toEntitySave());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -46,7 +37,7 @@ public class ArticuloDao {
 		if (articulo != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(articulo.toEntity());
+			s.update(articulo.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -57,7 +48,7 @@ public class ArticuloDao {
 		if (articulo != null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(articulo.toEntity());
+			session.delete(articulo.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();

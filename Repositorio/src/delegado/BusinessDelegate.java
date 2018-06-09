@@ -44,10 +44,7 @@ public class BusinessDelegate {
 	}
 	
 	/*************************************************** CLIENTES ************************************************************************************/
-	
-	public ClienteDTO buscarClienteByDni (int dni) throws RemoteException, ClienteException {
-		return ir.buscarClienteByDni(dni);
-	}
+
 	
 	public float limiteCreditoDisponibleCliente(ClienteDTO clienteDTO) throws RemoteException, ClienteException{
 		return ir.limiteCreditoDisponibleCliente(clienteDTO);
@@ -127,6 +124,11 @@ public class BusinessDelegate {
 
 	public void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException {
 		ir.procesarOC(idOC);
+		
+	}
+
+	public ClienteDTO buscarClienteByDni(int dni) throws RemoteException, ClienteException {
+		return ir.buscarClienteByDni(dni);
 		
 	}
 

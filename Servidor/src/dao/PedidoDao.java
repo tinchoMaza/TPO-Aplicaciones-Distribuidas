@@ -3,17 +3,13 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
 import entities.PedidoEntity;
-import entities.UbicacionEntity;
 import excepciones.PedidoException;
 import hibernate.HibernateUtil;
 import negocio.Pedido;
-import negocio.Ubicacion;
 
 public class PedidoDao {
 
@@ -33,7 +29,7 @@ public class PedidoDao {
 		if (p != null) {
 			Session session = sf.openSession();
 			session.beginTransaction();
-			Integer id =  (Integer) session.save(p.toEntity());
+			Integer id =  (Integer) session.save(p.toEntitySave());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -48,7 +44,7 @@ public class PedidoDao {
 		if (p != null) {
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.update(p.toEntity());
+			session.update(p.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -61,7 +57,7 @@ public class PedidoDao {
 		if (p != null) {
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(p.toEntity());
+			session.delete(p.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -126,6 +122,7 @@ public class PedidoDao {
 		Query query = s.createQuery("Select p From PedidoEntity p where p.estado = ? and p.nroPedido>?");
 		query.setParameter(0, estado);
 		query.setParameter(1, nroPedido);
+		@SuppressWarnings("unchecked")
 		List<PedidoEntity> aux = query.list();
 		if (aux != null) {
 			for(PedidoEntity ped : aux)

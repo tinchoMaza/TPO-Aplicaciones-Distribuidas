@@ -1,10 +1,6 @@
 package negocio;
 
 import java.util.*;
-
-import javax.swing.JOptionPane;
-
-import dao.ArticuloDao;
 import dao.OrdenDeCompraDao;
 import dto.ItemOrdenDeCompraDTO;
 import dto.OrdenDeCompraDTO;
@@ -75,7 +71,9 @@ public class OrdenDeCompra {
 
 	public void nuevoItemOC(Articulo articulo, int cant, float precio) throws OrdenDeCompraException{
 		ItemOrdenDeCompra itemOC = new ItemOrdenDeCompra(this, articulo, cant, precio);
-		itemOC.save();
+		int id = itemOC.save();
+		itemOC.setIdItemOC(id);
+		this.items.add(itemOC);
 	}
 	
 	public int save() throws ArticuloException, OrdenDeCompraException {
@@ -86,17 +84,29 @@ public class OrdenDeCompra {
 		OrdenDeCompraDao.getInstancia().update(this);
 	}
 
-	public OrdenDeCompraEntity toEntity(){
+	public OrdenDeCompraEntity toEntitySave(){
 		OrdenDeCompraEntity oc = new OrdenDeCompraEntity();
 		oc.setEstado(this.getEstado());
 		oc.setFecha(this.getFecha());
 		oc.setItems(this.getItemsEntity(oc));
-		oc.setOP(this.getOrdenPedido().toEntity());
+		oc.setOP(this.getOrdenPedido().toEntityUpdate());
+		oc.setProveedor(this.getProv().toEntity());
+		return oc;
+	}
+
+	
+	public OrdenDeCompraEntity toEntityUpdate(){
+		OrdenDeCompraEntity oc = new OrdenDeCompraEntity();
+		oc.setEstado(this.getEstado());
+		oc.setFecha(this.getFecha());
+		oc.setItems(this.getItemsEntity(oc));
+		oc.setOP(this.getOrdenPedido().toEntityUpdate());
 		oc.setProveedor(this.getProv().toEntity());
 		oc.setIdOC(this.getIdOc());
 		return oc;
 	}
 
+	
 	public OrdenDeCompraDTO toDTO(){
 		OrdenDeCompraDTO oc = new OrdenDeCompraDTO();
 		oc.setEstado(this.getEstado());
@@ -161,7 +171,7 @@ public class OrdenDeCompra {
 		}			
 		for (ItemOrdenDeCompra o: this.getItems()){
 			ItemOrdenDeCompraEntity aux = new ItemOrdenDeCompraEntity();
-			aux.setArticulo(o.getArticulo().toEntity());
+			aux.setArticulo(o.getArticulo().toEntityUpdate());
 			aux.setCantidad(o.getCantidad());
 			aux.setOc(oc);
 			aux.setItemOC(o.getIdItemOC());

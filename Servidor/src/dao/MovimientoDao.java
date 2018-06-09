@@ -1,7 +1,5 @@
 package dao;
 
-
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -35,7 +33,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoSimpleEntity aux = new MovimientoSimpleEntity();
 			aux.setIdMov(movimiento.getIdMov());
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setFecha(movimiento.getFecha());
 			aux.setTipoMovimiento("SIMPLE");
 			Session s = sf.openSession();
@@ -52,7 +50,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoDañoEntity aux = new MovimientoDañoEntity();
 			aux.setTipoMovimiento("DAÑO");
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setEncargado(movimiento.getEncargado());
 			aux.setFecha(movimiento.getFecha());
 			aux.setAutorizante(movimiento.getAutorizante());
@@ -73,7 +71,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoAjusteEntity aux = new MovimientoAjusteEntity();
 			aux.setTipoMovimiento("AJUSTE");
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setEncargado(movimiento.getEncargado());
 			aux.setFecha(movimiento.getFecha());
 			aux.setDescripcion(movimiento.getDescripcion());
@@ -93,7 +91,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoSimpleEntity aux = new MovimientoSimpleEntity();
 			aux.setIdMov(movimiento.getIdMov());
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setFecha(movimiento.getFecha());
 			aux.setTipoMovimiento("SIMPLE");
 			Session s = sf.openSession();
@@ -110,7 +108,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoDañoEntity aux = new MovimientoDañoEntity();
 			aux.setTipoMovimiento("DAÑO");
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setEncargado(movimiento.getEncargado());
 			aux.setFecha(movimiento.getFecha());
 			aux.setAutorizante(movimiento.getAutorizante());
@@ -131,7 +129,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoAjusteEntity aux = new MovimientoAjusteEntity();
 			aux.setTipoMovimiento("AJUSTE");
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setEncargado(movimiento.getEncargado());
 			aux.setFecha(movimiento.getFecha());
 			aux.setDescripcion(movimiento.getDescripcion());
@@ -150,7 +148,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoSimpleEntity aux = new MovimientoSimpleEntity();
 			aux.setIdMov(movimiento.getIdMov());
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setFecha(movimiento.getFecha());
 			aux.setTipoMovimiento("SIMPLE");
 			Session s = sf.openSession();
@@ -167,7 +165,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoDañoEntity aux = new MovimientoDañoEntity();
 			aux.setTipoMovimiento("DAÑO");
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setEncargado(movimiento.getEncargado());
 			aux.setFecha(movimiento.getFecha());
 			aux.setAutorizante(movimiento.getAutorizante());
@@ -188,7 +186,7 @@ public class MovimientoDao {
 		if (movimiento != null){
 			MovimientoAjusteEntity aux = new MovimientoAjusteEntity();
 			aux.setTipoMovimiento("AJUSTE");
-			aux.setArticulo(movimiento.getArticulo().toEntity());
+			aux.setArticulo(movimiento.getArticulo().toEntityUpdate());
 			aux.setEncargado(movimiento.getEncargado());
 			aux.setFecha(movimiento.getFecha());
 			aux.setDescripcion(movimiento.getDescripcion());

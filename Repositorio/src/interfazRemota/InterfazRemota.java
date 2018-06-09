@@ -27,7 +27,6 @@ public interface InterfazRemota extends Remote {
 	
 	/*************************************************** CLIENTES ************************************************************************************/
 	
-	public abstract ClienteDTO buscarClienteByDni(int dni) throws RemoteException, ClienteException;
 	
 	public abstract float limiteCreditoDisponibleCliente(ClienteDTO clienteDTO) throws RemoteException, ClienteException;
 	
@@ -83,6 +82,8 @@ public interface InterfazRemota extends Remote {
 	 * @throws PedidoException ***********************************************************************************************/
 	
 	public abstract void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException;
+
+	public abstract ClienteDTO buscarClienteByDni(int dni) throws RemoteException, ClienteException;
 }
 
 

@@ -1,10 +1,6 @@
 package controladores;
 
-import java.sql.SQLException;
 import java.util.*;
-
-import javax.swing.JOptionPane;
-
 import dao.ArticuloDao;
 import dao.ArticuloDepositoDao;
 import dao.OrdenDePedidoDao;
@@ -23,7 +19,6 @@ import excepciones.UbicacionException;
 import negocio.Ubicacion;
 import negocio.Articulo;
 import negocio.ArticuloDeposito;
-import negocio.ItemOrdenDePedido;
 import negocio.ItemPedido;
 import negocio.OrdenDePedido;
 import negocio.Pedido;
@@ -154,41 +149,27 @@ public class ControladorDeposito {
 				}
 				
 				//modificar el array pedidosRealizados en ControladorClientes
-				//OrdenDePedido nuevaOP = OrdenDePedidoDao.getInstancia().buscarOPByID(op.getIdOp());
 				orDePedidos.add(op);
-				Proveedor prov = ProveedoresDao.getInstancia().buscarProveedorByCuit(2456932);
-				ControladorCompras.getInstancia().emitirOC(op, prov);	
+				Proveedor prov = ProveedoresDao.getInstancia().buscarProveedorByCuit(2456932); // esto no va a estar mas aca
+				ControladorCompras.getInstancia().emitirOC(op, prov);	 // esto no va a estar mas aca
 			}
 			
-			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
-			nuevoPedido.setEstado("APROBADO_EN_ESPERA_STOCK");
-			nuevoPedido.update();
-			//pedido.setEstado("APROBADO_EN_ESPERA_STOCK");
-			//pedido.update();
+			pedido.setEstado("APROBADO_EN_ESPERA_STOCK");
+			pedido.update();
 	
 		}
 		else
 		{
 
-			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
-			nuevoPedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
-			nuevoPedido.update();
-			//pedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
-			//pedido.update();
+			pedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
+			pedido.update();
 			//modificar el array pedidosRealizados en ControladorClientes
 		}
 	}
 
 
 	private boolean existeOrdenPedido(Articulo articulo, int cantidad) throws OrdenDePedidoException {
-		/*boolean b = false;
-		for (OrdenDePedido op : this.orDePedidos)
-			for (ItemOrdenDePedido item : op.getArticulos())
-				if(item.getArticulo().getIdArticulo() == articulo.getIdArticulo())
-					b = true;
-		if(b)
-			return b;
-		else*/
+			// aca no hago el de memoria porque no se sabe si esta completo o incompleto, y deberia hacerlo para todas las OP que existan. si hay 1 sola en cache va a entrar por el if y no va a tener en cuenta todas las demas.
 			return OrdenDePedidoDao.getInstancia().existeOrdenPedido(articulo, cantidad); //Si hay que buscar en la base y agregarlo a memoria, retornar un objeto OP y agregarlo a la cache.
 	}
 
@@ -219,10 +200,10 @@ public class ControladorDeposito {
 						}
 						u.update();
 						fueInsertado = true;
-						Ubicacion nuevaUbicacion = UbicacionDao.getInstancia().buscarUbicacionById(u.getIdUbicacion());
-						u = nuevaUbicacion;
 					}
 				}
+				Ubicacion nuevaUbicacion = UbicacionDao.getInstancia().buscarUbicacionById(u.getIdUbicacion());
+				u = nuevaUbicacion;
 			}
 		}
 

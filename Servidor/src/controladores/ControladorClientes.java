@@ -1,6 +1,5 @@
 package controladores;
 import negocio.Pedido;
-
 import java.util.*;
 import dao.ArticuloDao;
 import dao.ClienteDao;
@@ -17,7 +16,6 @@ import excepciones.ProveedorException;
 import negocio.Articulo;
 import negocio.Cliente;
 import negocio.CuentaCorriente;
-import negocio.ItemPedido;
 
 public class ControladorClientes {
 
@@ -34,9 +32,7 @@ public class ControladorClientes {
 	private List<Cliente> misClientes = new ArrayList<Cliente>();
 
 	public void agregarCliente(int dni, String nombre, String rznSoc, int cuit, float limCredito, CuentaCorriente cuentaCorriente, String condEspePago, String notaAdv, String calleDom, int nroDom, String localidadDom, int cpDom) throws ClienteException{
-
 		Cliente c = new Cliente(dni, nombre, rznSoc, cuit, limCredito, cuentaCorriente, condEspePago, notaAdv, calleDom, nroDom, localidadDom, cpDom);
-		c.save();
 		misClientes.add(c);
 	}
 
@@ -50,17 +46,17 @@ public class ControladorClientes {
 		}
 	}
 
-	public ClienteDTO buscarClienteByDni(int dni) throws ClienteException{
+	public Cliente buscarClienteByDni(int dni) throws ClienteException{
 		for (Cliente c : misClientes)
 		{
 		   if (c.getDni() == dni)
-		      return c.toDTO();
+		      return c;
 		}
 		
 		Cliente cliente = null;
 		cliente = ClienteDao.getInstancia().buscarClienteByDni(dni);
 		misClientes.add(cliente);
-		return cliente.toDTO();
+		return cliente;
 	}
 
 	public List<PedidoDTO> buscarPedidosByCliente(int dni) throws PedidoException{
@@ -95,9 +91,54 @@ public class ControladorClientes {
 		return devolver;
 	}
 
+	
+
+
+	public void altaPedido(List<ItemPedidoDTO> itemsPedido, String estado, ClienteDTO clienteDTO, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws ClienteException, ArticuloException, PedidoException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
+		if (itemsPedido.size()<=0)
+			throw new PedidoException("El pedido no tiene items asociados");
+		int id;
+		Date fechaGeneracion = Calendar.getInstance().getTime();
+		Date fechaDespacho = Calendar.getInstance().getTime(); // ponemos null o que inicialice todo en el dia de hoy?
+		Date fechaEntregaEsperada = Calendar.getInstance().getTime();
+		Date fechaEntrega = Calendar.getInstance().getTime();
+		float precioTotalBruto = 0;
+		float precioTotalFinal = 0;
+		Cliente cliente = null;
+		cliente = buscarClienteByDni(clienteDTO.getDni());
+		Pedido pedido = new Pedido(estado ,cliente, fechaGeneracion, fechaDespacho,fechaEntregaEsperada, fechaEntrega, precioTotalBruto, precioTotalFinal, formaDePago, calleDireccEnvio, nroDireccEnvio, localidadDireccEnvio, cpDirecEnvio);
+		id = pedido.save();
+		pedido.setNroPedido(id);
+		for(ItemPedidoDTO item : itemsPedido){
+			Articulo articulo = null;
+			articulo = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
+			if (articulo != null){
+				pedido.nuevoItemPedido(item.getCant(),articulo);		
+			}
+		}
+		pedidosRealizados.add(pedido);
+		autorizarPedido(true, pedido.toDTO()); //no va a estar mas aca
+	}
+
 	public void autorizarPedido(boolean autorizado, PedidoDTO pedido) throws PedidoException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
-		//poner parte de memoria
-		
+		boolean memoria = false;
+		for (Pedido p : pedidosRealizados){
+			if (p.getNroPedido() == pedido.getNroPedido() && memoria == false){
+				memoria = true;
+				if (autorizado==true){
+					p.setEstado("APROBADO");
+					p.update();
+					ControladorDeposito.getInstancia().verificarExistenciaStock(p);
+				}
+				else
+				{
+					p.setEstado("RECHAZADO");
+					p.update();
+				}
+			}
+
+		}
+		if (memoria == false){
 			Pedido p = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
 			if (autorizado == true)
 			{
@@ -109,40 +150,13 @@ public class ControladorClientes {
 			{
 				p.setEstado("RECHAZADO");
 				p.update();
-				
-			}
-	}
-
-
-
-
-
-
-	public void altaPedido(List<ItemPedidoDTO> itemsPedido, String estado, ClienteDTO clienteDTO, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws ClienteException, ArticuloException, PedidoException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
-		if (itemsPedido.size()<=0)
-			throw new PedidoException("El pedido no tiene items asociados");
-		int id;
-		Date fechaGeneracion = Calendar.getInstance().getTime();
-		Date fechaDespacho = Calendar.getInstance().getTime();
-		Date fechaEntregaEsperada = Calendar.getInstance().getTime();
-		Date fechaEntrega = Calendar.getInstance().getTime();
-		float precioTotalBruto = 0;
-		float precioTotalFinal = 0;
-		Cliente cliente = null;
-		cliente = ClienteDao.getInstancia().buscarClienteByDni(clienteDTO.getDni());
-		Pedido pedido = new Pedido(estado ,cliente, fechaGeneracion, fechaDespacho,fechaEntregaEsperada, fechaEntrega, precioTotalBruto, precioTotalFinal, formaDePago, calleDireccEnvio, nroDireccEnvio, localidadDireccEnvio, cpDirecEnvio);
-		id = pedido.save();
-		pedido.setNroPedido(id);
-		for(ItemPedidoDTO item : itemsPedido){
-			Articulo articulo = null;
-			articulo = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
-			if (articulo != null){
-				pedido.nuevoItemPedido(item.getCant(),articulo);		
 			}
 		}
-		Pedido pedidoNuevo = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
-		pedidosRealizados.add(pedidoNuevo);
-		
-		autorizarPedido(true, pedidoNuevo.toDTO()); //no va a estar mas aca
+
 	}
+
+
+
+
+
 }

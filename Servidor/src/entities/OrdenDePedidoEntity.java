@@ -49,9 +49,18 @@ public class OrdenDePedidoEntity implements Serializable {
 		this.ordenesDeCompra = new ArrayList<OrdenDeCompraEntity>();
 		this.items = new ArrayList<ItemOrdenDePedidoEntity>();
 	}
+	
+	public OrdenDePedidoEntity( PedidoEntity pedido, String estado) {
+		super();
+		this.pedido = pedido;
+		this.estado = estado;
+		this.ordenesDeCompra = new ArrayList<OrdenDeCompraEntity>();
+		this.items = new ArrayList<ItemOrdenDePedidoEntity>();
+	}
 
 	//GETTERS Y SETTERS
-	
+
+
 	public Integer getIdOP() {
 		return idOP;
 	}

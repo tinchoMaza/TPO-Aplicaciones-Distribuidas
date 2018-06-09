@@ -1,11 +1,8 @@
 package negocio;
 
-import dao.FacturaDao;
 import dao.ItemPedidoDao;
-import dao.PedidoDao;
 import dto.ItemPedidoDTO;
 import entities.ItemPedidoEntity;
-import excepciones.FacturaException;
 import excepciones.PedidoException;
 
 public class ItemPedido {
@@ -34,15 +31,25 @@ public class ItemPedido {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemPedidoEntity toEntity() {
+	public ItemPedidoEntity toEntitySave() {
 		ItemPedidoEntity aux = new ItemPedidoEntity();
-		aux.setArticulo(this.getArticulo().toEntity());
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
 		aux.setCantidad(this.getCant());
-		aux.setIdItemPedido(this.getIdItemPedido());
-		aux.setPedido(this.getPedido().toEntity());
+		aux.setPedido(this.getPedido().toEntityUpdate());
 		return aux;
 
 	}	
+	
+	public ItemPedidoEntity toEntityUpdate() {
+		ItemPedidoEntity aux = new ItemPedidoEntity();
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
+		aux.setCantidad(this.getCant());
+		aux.setIdItemPedido(this.getIdItemPedido());
+		aux.setPedido(this.getPedido().toEntityUpdate());
+		return aux;
+
+	}	
+
 
 	public ItemPedidoDTO toDTO() {
 		ItemPedidoDTO aux = new ItemPedidoDTO();
@@ -53,8 +60,8 @@ public class ItemPedido {
 		return aux;
 	}	
 
-	public void save() throws PedidoException  {
-		ItemPedidoDao.getInstancia().save(this);
+	public int save() throws PedidoException  {
+		return ItemPedidoDao.getInstancia().save(this);
 
 	}
 

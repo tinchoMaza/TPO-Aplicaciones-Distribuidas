@@ -43,18 +43,30 @@ public class Remito {
 		this.pedido = pedido;
 		this.itemsRemito = itemsRemito;
 	}
+	
+	public RemitoEntity toEntitySave() {
+		RemitoEntity aux = new RemitoEntity();
+		aux.setCliente(this.getCliente().toEntity());
+		aux.setFechaRemito(this.getFechaRemito());
+		aux.setItemsRemito(this.getItemsRemitoEntity());
+		aux.setPedido(this.getPedido().toEntityUpdate());
+		return aux;
 
-	public RemitoEntity toEntity() {
+	}
+
+	public RemitoEntity toEntityUpdate() {
 		RemitoEntity aux = new RemitoEntity();
 		aux.setCliente(this.getCliente().toEntity());
 		aux.setFechaRemito(this.getFechaRemito());
 		aux.setItemsRemito(this.getItemsRemitoEntity());
 		aux.setNroRemito(this.getNroRemito());
-		aux.setPedido(this.getPedido().toEntity());
+		aux.setPedido(this.getPedido().toEntityUpdate());
 		return aux;
 
 	}
 
+
+	
 	public RemitoDTO toDTO() {
 		RemitoDTO aux = new RemitoDTO();
 		aux.setClienteDTO(this.getCliente().toDTO());
@@ -73,13 +85,16 @@ public class Remito {
 		return 0;
 	}
 
-	public void nuevoItemRem(Articulo articulo, int cant, float precio){
-		itemsRemito.add(new ItemRemito(this,cant,articulo,precio));
+	public void nuevoItemRem(Articulo articulo, int cant, float precio) throws RemitoException{
+		ItemRemito item = new ItemRemito(this,cant,articulo,precio);
+		int id = item.save();
+		item.setIdItemRemito(id);
+		itemsRemito.add(item);
 
 	}
 
-	public void save() throws RemitoException{
-		RemitoDao.getInstancia().save(this);
+	public int save() throws RemitoException{
+		return RemitoDao.getInstancia().save(this);
 	}
 
 	//Getters y Setters
@@ -123,7 +138,7 @@ public class Remito {
 	public List<ItemRemitoEntity> getItemsRemitoEntity() {
 		List<ItemRemitoEntity> it = new ArrayList<ItemRemitoEntity>();
 		for (ItemRemito a : this.getItemsRemito()){
-			it.add(a.toEntity());
+			it.add(a.toEntityUpdate());
 		}
 		return it;
 	}

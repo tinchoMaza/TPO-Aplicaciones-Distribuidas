@@ -1,15 +1,10 @@
 package dao;
 
 import java.util.*;
-
-import javax.swing.JOptionPane;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
 import entities.ArticuloDepositoEntity;
-import entities.ArticuloEntity;
 import excepciones.ArticuloException;
 import hibernate.HibernateUtil;
 import negocio.ArticuloDeposito;
@@ -34,7 +29,7 @@ public class ArticuloDepositoDao {
 			SessionFactory sf = HibernateUtil.getSessionFactory();
 			Session s = sf.openSession();
 			s.beginTransaction();
-			int id = (Integer) s.save(articulo.toEntity());
+			int id = (Integer) s.save(articulo.toEntitySave());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();
@@ -48,7 +43,7 @@ public class ArticuloDepositoDao {
 		if (articulo != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(articulo.toEntity2());
+			s.update(articulo.toEntityUpdate());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();
@@ -60,7 +55,7 @@ public class ArticuloDepositoDao {
 		if (articulo != null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(articulo.toEntity());
+			session.delete(articulo.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -88,6 +83,7 @@ public class ArticuloDepositoDao {
 	public List<ArticuloDeposito> cargarArticulosDeposito() {
 		Session session = sf.openSession();
 		Query query = session.createQuery("select c from ArticuloDepositoEntity c");
+		@SuppressWarnings("unchecked")
 		List<ArticuloDepositoEntity> artDepoEnt = query.list();
 		List<ArticuloDeposito> artsdep = new ArrayList<ArticuloDeposito>();
 		for(ArticuloDepositoEntity ae : artDepoEnt)

@@ -3,9 +3,6 @@ package dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-
-import entities.MovimientoCtaCteEntity;
 import excepciones.CuentaCorrienteException;
 import hibernate.HibernateUtil;
 import negocio.MovimientoCtaCte;
@@ -25,10 +22,9 @@ public class MovimientoCtaCteDao {
 
 	public void save(MovimientoCtaCte m) throws CuentaCorrienteException{
 		if (m != null){
-			MovimientoCtaCteEntity mov = m.toEntity();
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.save(mov);
+			session.save(m.toEntitySave());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -41,10 +37,10 @@ public class MovimientoCtaCteDao {
 
 	public void update(MovimientoCtaCte m) throws CuentaCorrienteException{
 		if (m != null){
-			MovimientoCtaCteEntity mov = m.toEntity();
+
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.update(mov);
+			session.update(m.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -55,10 +51,9 @@ public class MovimientoCtaCteDao {
 
 	public void delete(MovimientoCtaCte m) throws CuentaCorrienteException{
 		if (m != null){
-			MovimientoCtaCteEntity mov = m.toEntity();
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.delete(mov);
+			session.delete(m.toEntityUpdate());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();

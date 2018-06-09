@@ -1,17 +1,11 @@
 package dao;
 
-
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
-import entities.ClienteEntity;
 import entities.OrdenDeCompraEntity;
-import excepciones.ClienteException;
 import excepciones.OrdenDeCompraException;
 import hibernate.HibernateUtil;
-import negocio.Cliente;
 import negocio.OrdenDeCompra;
 
 public class OrdenDeCompraDao {
@@ -29,7 +23,7 @@ public class OrdenDeCompraDao {
 		if (oc != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			int id = (Integer) s.save(oc.toEntity());
+			int id = (Integer) s.save(oc.toEntitySave());
 			s.getTransaction().commit();
 			s.close();
 			return id;
@@ -42,7 +36,7 @@ public class OrdenDeCompraDao {
 		if (oc != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(oc.toEntity());
+			s.update(oc.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -54,7 +48,7 @@ public class OrdenDeCompraDao {
 		if (oc != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.delete(oc.toEntity());
+			s.delete(oc.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{

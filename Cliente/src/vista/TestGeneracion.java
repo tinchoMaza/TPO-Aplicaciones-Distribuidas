@@ -22,7 +22,7 @@ public class TestGeneracion {
 		
 		/****ALTA PEDIDO CON ITEMS QUE EXISTA STOCK DE TODO****/
 		
-	/*	List<ItemPedidoDTO> misItems = new ArrayList<ItemPedidoDTO>();
+	/*List<ItemPedidoDTO> misItems = new ArrayList<ItemPedidoDTO>();
 		ItemPedidoDTO item = new ItemPedidoDTO ();
 		try {
 			item.setArticulo(BusinessDelegate.getInstancia().buscarArticuloById(1));
@@ -45,8 +45,9 @@ public class TestGeneracion {
 		} catch (RemoteException | ArticuloException e1) {
 			System.out.println(e1.getMessage());
 		}
+/*
+*/
 
-		*/
 
 		try {
 			//setear idoc a la que figura en la bd
@@ -71,8 +72,8 @@ public class TestGeneracion {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
+/*
+*/
 		
 		/****ALTA PEDIDO CON ITEMS QUE FALTE 1 o 2 PRODUCTOS****/
 		

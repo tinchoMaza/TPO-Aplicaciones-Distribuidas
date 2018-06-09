@@ -35,6 +35,14 @@ public class MovimientoCtaCteEntity implements Serializable{
 		this.descripcion = descripcion;
 	}
 	
+	public MovimientoCtaCteEntity(CuentaCorrienteEntity cuentaCorriente, Date fecha, float monto, String descripcion) {
+		super();
+		this.cuentaCorriente = cuentaCorriente;
+		this.fecha = fecha;
+		this.monto = monto;
+		this.descripcion = descripcion;
+	}
+	
 	public MovimientoCtaCte toNegocio(CuentaCorriente ctaCte) {
 		return new MovimientoCtaCte(ctaCte, this.nroMov, this.fecha, this.monto, this.descripcion);
 	}

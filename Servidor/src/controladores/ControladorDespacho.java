@@ -1,9 +1,7 @@
 package controladores;
 
 import java.util.*;
-import dao.ArticuloDao;
 import dao.PedidoDao;
-import dto.ItemPedidoDTO;
 import dto.PedidoDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;

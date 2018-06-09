@@ -2,9 +2,6 @@ package entities;
 
 import java.util.*;
 import javax.persistence.*;
-
-import dto.ArticuloDepositoDTO;
-import negocio.ArticuloDeposito;
 import negocio.Ubicacion;
 
 import java.io.*;

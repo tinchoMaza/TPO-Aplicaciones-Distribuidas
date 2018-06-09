@@ -10,6 +10,8 @@ import negocio.MovimientoAjuste;
 
 public class MovimientoAjusteEntity extends MovimientoEntity {
 	
+
+	private static final long serialVersionUID = 3609250510543411955L;
 	private String encargado;
 	private String descripcion;
 	

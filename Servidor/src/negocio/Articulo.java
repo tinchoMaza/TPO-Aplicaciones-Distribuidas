@@ -47,7 +47,7 @@ public class Articulo {
 		this.precioVentaUnitario = precioVentaUnitario;
 	}
 
-	public ArticuloEntity toEntity(){
+	public ArticuloEntity toEntityUpdate(){
 		ArticuloEntity aux = new ArticuloEntity();
 		aux.setCantCompraFija(this.cantCompraFija);
 		aux.setCapacidadArticulo(this.CapacidadArticulo);
@@ -62,6 +62,21 @@ public class Articulo {
 	}
 
 
+	public ArticuloEntity toEntitySave(){
+		ArticuloEntity aux = new ArticuloEntity();
+		aux.setCantCompraFija(this.cantCompraFija);
+		aux.setCapacidadArticulo(this.CapacidadArticulo);
+		aux.setCodBarras(this.codBarras);
+		aux.setDescripcion(this.descripcion);
+		aux.setNombre(this.nombre);
+		aux.setPrecioVentaUnitario(this.precioVentaUnitario);
+		aux.setPresentacion(this.presentacion);
+		aux.setUnidadMedida(this.unidadMedida);
+		return aux;
+	}
+
+
+	
 	public ArticuloDTO toDTO() {
 		ArticuloDTO aux = new ArticuloDTO();
 		aux.setCantCompraFija(this.cantCompraFija);

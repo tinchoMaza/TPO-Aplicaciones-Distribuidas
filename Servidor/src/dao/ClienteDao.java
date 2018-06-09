@@ -4,12 +4,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-
 import entities.ClienteEntity;
 import entities.MovimientoCtaCteEntity;
 import excepciones.ClienteException;
@@ -61,10 +58,9 @@ public class ClienteDao {
 
 	public void save(Cliente c) throws ClienteException{
 		if (c != null){
-			ClienteEntity ce = c.toEntity();
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.save(ce);
+			session.save(c.toEntity());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
@@ -75,10 +71,9 @@ public class ClienteDao {
 
 	public void update(Cliente c) throws ClienteException {
 		if (c != null){
-			ClienteEntity ce = c.toEntity();
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.update(ce);
+			session.update(c.toEntity());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();

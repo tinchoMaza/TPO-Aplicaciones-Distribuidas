@@ -1,7 +1,6 @@
 package controladores;
 
 import java.util.*;
-
 import dao.ArticuloDao;
 import dao.ClienteDao;
 import dao.FacturaDao;
@@ -20,6 +19,7 @@ import negocio.Cliente;
 import negocio.Factura;
 import negocio.Pedido;
 import negocio.Remito;
+
 public class ControladorFacturacion {
 
 	private static ControladorFacturacion instancia;
@@ -47,12 +47,14 @@ public class ControladorFacturacion {
 	public void facturarPedido(Pedido pedido) throws PedidoException, ArticuloException, FacturaException{
 		Date fecha = new Date();
 		Pedido pedidoNegocio = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
-		Factura factura = new Factura(0, fecha, pedidoNegocio, pedidoNegocio.getCliente(), pedidoNegocio.getPrecioTotalFinal(), "IMPAGA");
+		Factura factura = new Factura(fecha, pedidoNegocio, pedidoNegocio.getCliente(), pedidoNegocio.getPrecioTotalFinal(), "IMPAGA");
+		int id = factura.save();
+		factura.setNroFactura(id);
 		for(ItemPedidoDTO item : pedido.getItemsPedidoDTO()){
 			Articulo art = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
 			factura.nuevoItemFact(art, item.getCant(), item.getArticulo().getPrecioVentaUnitario());
 		}
-		factura.save();
+	
 		misFacturas.add(factura);
 	}
 	
@@ -63,11 +65,13 @@ public class ControladorFacturacion {
 		Cliente clienteNegocio = null;
 		clienteNegocio = ClienteDao.getInstancia().buscarClienteByDni(pedido.getCliente().getDni());
 		Remito remito = new Remito(fecha, clienteNegocio, pedidoNegocio, null);
+		int id = remito.save();
+		remito.setNroRemito(id);
 		for(ItemPedidoDTO item : pedido.getItemsPedidoDTO()) {
 			Articulo art = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
 			remito.nuevoItemRem(art, item.getCant(), item.getArticulo().getPrecioVentaUnitario());
 		}
-		remito.save();
+
 		misRemitos.add(remito);
 	}
 

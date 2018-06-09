@@ -3,21 +3,12 @@ package dao;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-
-import dto.ArticuloDTO;
-import entities.ClienteEntity;
 import entities.OrdenDePedidoEntity;
-
 import java.util.*;
-
-import javax.swing.JOptionPane;
-
-import excepciones.ClienteException;
 import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
 import hibernate.HibernateUtil;
 import negocio.Articulo;
-import negocio.Cliente;
 import negocio.ItemOrdenDePedido;
 import negocio.ItemPedido;
 import negocio.OrdenDePedido;
@@ -38,7 +29,7 @@ public class OrdenDePedidoDao {
 		if (op != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			int id = (Integer) s.save(op.toEntity());
+			int id = (Integer) s.save(op.toEntitySave());
 			s.getTransaction().commit();
 			s.close();
 			return id;
@@ -51,7 +42,7 @@ public class OrdenDePedidoDao {
 		if (op != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(op.toEntity());
+			s.update(op.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -64,7 +55,7 @@ public class OrdenDePedidoDao {
 		if (op != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.delete(op.toEntity());
+			s.delete(op.toEntityUpdate());
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -76,6 +67,7 @@ public class OrdenDePedidoDao {
 		List<OrdenDePedido> ordenes = new ArrayList<OrdenDePedido>();
 		Session session = sf.openSession();
 		Query query = session.createQuery("select o from OrdenDePedidoEntity o");
+		@SuppressWarnings("unchecked")
 		List<OrdenDePedidoEntity> ordenesEntity = query.list();
 		if (ordenesEntity != null){
 			for(OrdenDePedidoEntity oe : ordenesEntity)
@@ -102,14 +94,12 @@ public class OrdenDePedidoDao {
 		OrdenDePedidoEntity ord = null;
 		Session session = sf.openSession();
 		session.beginTransaction();
-		JOptionPane.showMessageDialog(null,"1 + id es  " + idOp);
 		Query query = session.createQuery("from OrdenDePedidoEntity o where o.idOp=?");
 		query.setInteger(0, idOp);
 		ord = (OrdenDePedidoEntity) query.uniqueResult();
 		session.flush();
 		session.getTransaction().commit();
 		session.close();
-		JOptionPane.showMessageDialog(null, "" + ord.getIdOP() + " " + ord.getItems().size());
 		if (ord == null) 
 			throw new PedidoException("Error al buscar la orden de pedido en la BD");
 		else

@@ -46,11 +46,24 @@ public class CuentaCorriente {
 		return 123456;
 	}
 
-	public CuentaCorrienteEntity toEntity() {
+	public CuentaCorrienteEntity toEntitySave() {
+		CuentaCorrienteEntity cuentaentity = new CuentaCorrienteEntity(this.fecha, this.especie, this.saldo);
+		if(!this.movimientos.isEmpty() || this.movimientos != null) {
+			for(MovimientoCtaCte m : this.movimientos){
+				MovimientoCtaCteEntity moventity = m.toEntityUpdate();
+				moventity.setCuentaCorriente(cuentaentity);
+				cuentaentity.getMovimientos().add(moventity);
+			}
+		}
+		return cuentaentity;
+	}
+	
+
+	public CuentaCorrienteEntity toEntityUpdate() {
 		CuentaCorrienteEntity cuentaentity = new CuentaCorrienteEntity(this.idCuentaCorriente, this.fecha, this.especie, this.saldo);
 		if(!this.movimientos.isEmpty() || this.movimientos != null) {
 			for(MovimientoCtaCte m : this.movimientos){
-				MovimientoCtaCteEntity moventity = m.toEntity();
+				MovimientoCtaCteEntity moventity = m.toEntityUpdate();
 				moventity.setCuentaCorriente(cuentaentity);
 				cuentaentity.getMovimientos().add(moventity);
 			}

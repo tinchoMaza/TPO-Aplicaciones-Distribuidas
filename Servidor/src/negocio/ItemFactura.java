@@ -24,24 +24,33 @@ public class ItemFactura {
 	}
 
 
-	public void save() throws FacturaException {
-		ItemFacturaDao.getInstancia().save(this);
+	public int save() throws FacturaException {
+		return ItemFacturaDao.getInstancia().save(this);
 	}
 
 	public void update() throws FacturaException {
 		ItemFacturaDao.getInstancia().update(this);
 	}
 
-	public ItemFacturaEntity toEntity(){
+	public ItemFacturaEntity toEntityUpdate(){
 		ItemFacturaEntity aux = new ItemFacturaEntity();
-		aux.setArticulo(this.getArticulo().toEntity());
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
 		aux.setCantidad(this.getCantidad());
-		aux.setFactura(this.getFactura().toEntity());
+		aux.setFactura(this.getFactura().toEntityUpdate());
 		aux.setIdItemFactura(this.getIdItemFact());
 		aux.setPrecio(this.getPrecioSubTotal());
 		return aux;
 	}
 
+	public ItemFacturaEntity toEntitySave(){
+		ItemFacturaEntity aux = new ItemFacturaEntity();
+		aux.setArticulo(this.getArticulo().toEntityUpdate());
+		aux.setCantidad(this.getCantidad());
+		aux.setFactura(this.getFactura().toEntityUpdate());
+		aux.setPrecio(this.getPrecioSubTotal());
+		return aux;
+	}
+	
 	public ItemFacturaDTO toDTO (){
 		ItemFacturaDTO aux = new ItemFacturaDTO();
 		aux.setArticulo(this.getArticulo().toDTO());

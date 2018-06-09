@@ -1,7 +1,6 @@
 package objetoRemoto;
 
 import interfazRemota.InterfazRemota;
-import negocio.Articulo;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -42,15 +41,17 @@ public class ObjetoRemoto extends UnicastRemoteObject implements InterfazRemota 
 	
 	
 	
-	/********************************************* CLIENTES *********************************************/
-	
+	/********************************************* CLIENTES 
+	 * @throws ClienteException *********************************************/
 	
 
-	public ClienteDTO buscarClienteByDni(int dni) throws RemoteException, ClienteException {
-		
-		return ControladorClientes.getInstancia().buscarClienteByDni(dni);
+
+
+	public ClienteDTO buscarClienteByDni(int dni) throws ClienteException {
+		return ControladorClientes.getInstancia().buscarClienteByDni(dni).toDTO();
 	}
-	
+
+
 	public List<PedidoDTO> buscarPedidosByCliente(int cuitCliente) throws RemoteException, PedidoException {
 		return ControladorClientes.getInstancia().buscarPedidosByCliente(cuitCliente);
 	}
@@ -149,5 +150,6 @@ public class ObjetoRemoto extends UnicastRemoteObject implements InterfazRemota 
 		ControladorCompras.getInstancia().procesarOC(idOC);
 		
 	}
+
 
 }

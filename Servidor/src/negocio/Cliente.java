@@ -57,7 +57,7 @@ public class Cliente {
 		aux.setRazonSocial(this.razonSocial);
 		aux.setCuit(this.cuit);
 		aux.setLimiteCredito(this.limiteCredito);
-		aux.setCuentaCorrienteEntity(this.cuentaCorriente.toEntity());
+		aux.setCuentaCorrienteEntity(this.cuentaCorriente.toEntityUpdate());
 		aux.setCondEspPago(this.condEspPago);
 		aux.setNotasAdv(this.notasAdv);
 		aux.setCalleDom(this.calleDom);

@@ -23,11 +23,11 @@ public class Lote {
 		this.fechaVenc = fechaVenc;
 	}
 
-	public LoteEntity toEntity() {
+	public LoteEntity toEntitySave() {
 		return new LoteEntity(this.fechaVenc);
 	}
 	
-	public LoteEntity toEntity2() {
+	public LoteEntity toEntityUpdate() {
 		return new LoteEntity(this.idLote,this.fechaVenc);
 	}
 

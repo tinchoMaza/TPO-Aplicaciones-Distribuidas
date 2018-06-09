@@ -10,6 +10,9 @@ import negocio.MovimientoSimple;
 
 public class MovimientoSimpleEntity extends MovimientoEntity{
 
+	private static final long serialVersionUID = 5490385007861928134L;
+
+
 	public MovimientoSimpleEntity() {
 		super();
 	}
