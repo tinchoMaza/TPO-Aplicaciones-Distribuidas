@@ -33,6 +33,6 @@ public class Server {
 	
 	public static void main(String[] args) throws RemoteException {
 		new Server();
-		BusinessDelegate.getInstancia().cargarTodasUbicacionesYArticulos();
+		//BusinessDelegate.getInstancia().cargarTodasUbicacionesYArticulos();
 	}
 }

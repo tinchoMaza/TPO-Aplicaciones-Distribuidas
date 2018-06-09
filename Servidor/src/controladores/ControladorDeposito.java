@@ -55,7 +55,7 @@ public class ControladorDeposito {
 			stockTotal = getCantidadStockTotal(it.getArticulo());
 			int cantTemp = it.getCant();
 			if (stockTotal >= cantTemp){
-				for (Ubicacion u: ubicaciones){
+				for (Ubicacion u: ubicaciones){ // revisar cuando agregamos mas de un item a la orden de pedido a ver si esta ubicacion esta actualizada.
 					for (ArticuloDeposito a : u.getArticulos())
 						if (a.getArticulo().getIdArticulo() == it.getArticulo().getIdArticulo() && cantTemp > 0 && a.getEstado().equals("DISPONIBLE")){
 							a.reservarStock(pedido.getNroPedido());
