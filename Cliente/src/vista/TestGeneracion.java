@@ -27,20 +27,20 @@ public class TestGeneracion {
 		}
 		
 		/****ALTA PEDIDO CON ITEMS QUE EXISTA STOCK DE TODO****/
-	/*
+
 		List<ItemPedidoDTO> misItems = new ArrayList<ItemPedidoDTO>();
 		ItemPedidoDTO item1 = new ItemPedidoDTO ();
-		ItemPedidoDTO item2 = new ItemPedidoDTO ();
+		//ItemPedidoDTO item2 = new ItemPedidoDTO ();
 		ItemPedidoDTO item3 = new ItemPedidoDTO ();
 		try {
 			item1.setArticulo(BusinessDelegate.getInstancia().buscarArticuloById(1));
-			item1.setCant(2);
-			item2.setArticulo(BusinessDelegate.getInstancia().buscarArticuloById(2));
-			item2.setCant(30);
+			item1.setCant(3);
+			//item2.setArticulo(BusinessDelegate.getInstancia().buscarArticuloById(2));
+			//item2.setCant(30);
 			item3.setArticulo(BusinessDelegate.getInstancia().buscarArticuloById(4));
-			item3.setCant(13);
+			item3.setCant(15);
 			misItems.add(item1);
-			misItems.add(item2);
+			//misItems.add(item2);
 			misItems.add(item3);
 			try {
 				BusinessDelegate.getInstancia().altaPedido(misItems, "PENDIENTE", BusinessDelegate.getInstancia().buscarClienteByDni(12686), "FormaDePago", "Calle", 123, "Localidad", 1838);
@@ -59,15 +59,13 @@ public class TestGeneracion {
 		} catch (RemoteException | ArticuloException e1) {
 			System.out.println(e1.getMessage());
 		}
+
+
 /*
-*/
-
-
 		try {
 			//setear idoc a la que figura en la bd
-			//int idOC=15;
-			BusinessDelegate.getInstancia().procesarOC(2);
-			System.out.println("OC Completada");
+			BusinessDelegate.getInstancia().procesarOC(8);
+			System.out.println("OC Completada en test generacion");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,7 +85,6 @@ public class TestGeneracion {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-/*
 */
 		
 		/****ALTA PEDIDO CON ITEMS QUE FALTE 1 o 2 PRODUCTOS****/

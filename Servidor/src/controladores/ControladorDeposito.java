@@ -1,6 +1,9 @@
 package controladores;
 
 import java.util.*;
+
+import javax.swing.JOptionPane;
+
 import dao.ArticuloDao;
 import dao.ArticuloDepositoDao;
 import dao.OrdenDePedidoDao;
@@ -61,8 +64,10 @@ public class ControladorDeposito {
 							a.reservarStock(pedido.getNroPedido());
 							a.update();
 							cantTemp--;
+							it.setCant(it.getCant()-1);
 						}
 				}
+				it.update();
 			}	
 			else
 			{
@@ -98,6 +103,7 @@ public class ControladorDeposito {
 		for (ItemPedido it: pedido.getItemsPedido()){
 			stockTotal = getCantidadStockTotal(it.getArticulo());
 			int cantTemp = it.getCant();
+			JOptionPane.showMessageDialog(null, "stock total " + stockTotal + " cant temp " + cantTemp + "  del articulo " + it.getArticulo().getIdArticulo());
 			if (stockTotal >= cantTemp){
 				for (Ubicacion u: ubicaciones){
 					for (ArticuloDeposito a : u.getArticulos()){
@@ -105,16 +111,17 @@ public class ControladorDeposito {
 							a.reservarStock(pedido.getNroPedido());
 							a.update();
 							cantTemp--;
+							it.setCant(it.getCant()-1);
 						}
 					}
 				}
-
+				it.update();
 			}	
 			else
 			{
 				//comprobacion de que no exista otra Orden de pedido para el articulo
 				pedidoCompleto=false;
-				if(!existeOrdenPedido(it.getArticulo(), cantTemp - stockTotal))
+				if(existeOrdenPedido(it.getArticulo(), cantTemp - stockTotal) ==  false)
 					pedirArticulos.add(it.getArticulo());
 				//reservo lo que haya del articulo
 				if (stockTotal>0){
@@ -124,7 +131,6 @@ public class ControladorDeposito {
 								a.reservarStock(pedido.getNroPedido());
 								a.update();
 								it.setCant(it.getCant()-1);
-
 							}
 					}
 					it.update();
@@ -202,13 +208,14 @@ public class ControladorDeposito {
 						fueInsertado = true;
 					}
 				}
-				Ubicacion nuevaUbicacion = UbicacionDao.getInstancia().buscarUbicacionById(u.getIdUbicacion());
-				u = nuevaUbicacion;
+				//Ubicacion nuevaUbicacion = UbicacionDao.getInstancia().buscarUbicacionById(u.getIdUbicacion());
+				//u = nuevaUbicacion;
 			}
 		}
 
 	}
 	public void cargarTodasUbicacionesYArticulos() {
+		JOptionPane.showMessageDialog(null, "CARGANDO UBICACIONES Y ARTICULOS");
 		List<Ubicacion> ubs = UbicacionDao.getInstancia().cargarUbicaciones();
 		List<ArticuloDeposito> arts = ArticuloDepositoDao.getInstancia().cargarArticulosDeposito();
 		for (Ubicacion u : ubs) {
@@ -229,7 +236,7 @@ public class ControladorDeposito {
 						u.setEstado("DISPONIBLE");
 				}
 			}
-			u.save();
+			u.update();
 		}
 	}
 

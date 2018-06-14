@@ -118,6 +118,7 @@ public class ControladorClientes {
 		}
 		pedidosRealizados.add(pedido);
 		autorizarPedido(true, pedido.toDTO()); //no va a estar mas aca
+		//justo despues de autorizarlo, hay que facturarlo porque se pierde la cantidad de cada item ya que se va restando y muestra la cantidad pendiente
 	}
 
 	public void autorizarPedido(boolean autorizado, PedidoDTO pedido) throws PedidoException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{

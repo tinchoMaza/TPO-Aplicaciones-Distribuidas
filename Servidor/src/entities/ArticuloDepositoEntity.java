@@ -47,12 +47,12 @@ public class ArticuloDepositoEntity implements Serializable{
 
 	public ArticuloDeposito toNegocio() {
 		ArticuloDeposito aux = new ArticuloDeposito();
-		aux.setEstado(this.getEstado());
-		aux.setIdArticuloDeposito(this.getIdArticuloDeposito());
-		aux.setLote(this.getLote().toNegocio());
-		aux.setUbicacion(this.getUbicacion().toNegocio());
+		aux.setEstado(this.estado);
+		aux.setIdArticuloDeposito(this.idArticuloDeposito);
+		aux.setLote(this.lote.toNegocio());
+		aux.setUbicacion(this.ubicacion.toNegocio());
 		aux.setReservaIdPedido(this.reservaIdPedido);
-		aux.setArticulo(this.getArticulo().toNegocio());
+		aux.setArticulo(this.articulo.toNegocio());
 		return aux;
 	}
 

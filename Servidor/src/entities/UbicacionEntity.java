@@ -64,9 +64,9 @@ public class UbicacionEntity implements Serializable{
 	
 	public Ubicacion toNegocio() {
 		Ubicacion aux = new Ubicacion();
-		aux.setCapacidad(this.getCapacidad());
-		aux.setEstado(this.getEstado());
-		aux.setIdUbicacion(this.getIdUbicacion());
+		aux.setCapacidad(this.capacidad);
+		aux.setEstado(this.estado);
+		aux.setIdUbicacion(this.idUbicacion);
 		return aux;
 
 	}

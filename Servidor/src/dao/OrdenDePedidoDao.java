@@ -71,7 +71,7 @@ public class OrdenDePedidoDao {
 		List<OrdenDePedidoEntity> ordenesEntity = query.list();
 		if (ordenesEntity != null){
 			for(OrdenDePedidoEntity oe : ordenesEntity)
-				ordenes.add(oe.toNegocio());
+				ordenes.add(oe.toNegocio2());
 			return ordenes;
 		} else {
 			throw new OrdenDePedidoException("Error al cargar Ordenes de Pedido de la BD");

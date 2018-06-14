@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import dao.OrdenDeCompraDao;
 import excepciones.ArticuloException;
 import excepciones.LoteException;
