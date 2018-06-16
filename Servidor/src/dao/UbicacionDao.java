@@ -59,12 +59,11 @@ public class UbicacionDao {
 		}
 	}
 
-
+	@SuppressWarnings("unchecked")
 	public List<Ubicacion> cargarUbicaciones() {
 		Session session = sf.openSession();
 		session.beginTransaction();
 		Query query = session.createQuery("select u from UbicacionEntity u");
-		@SuppressWarnings("unchecked")
 		List<UbicacionEntity> ubsent = query.list();
 		List<Ubicacion> ubicaciones = new ArrayList<Ubicacion>();
 		for(UbicacionEntity ue : ubsent)

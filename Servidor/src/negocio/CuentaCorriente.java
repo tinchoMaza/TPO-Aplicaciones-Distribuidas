@@ -2,10 +2,16 @@ package negocio;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
+import dao.CuentaCorrienteDao;
 import dto.CuentaCorrienteDTO;
 import dto.MovimientoCtaCteDTO;
 import entities.CuentaCorrienteEntity;
+import entities.FacturaEntity;
+import entities.ItemFacturaEntity;
 import entities.MovimientoCtaCteEntity;
+import excepciones.CuentaCorrienteException;
 
 public class CuentaCorriente {
 
@@ -36,39 +42,64 @@ public class CuentaCorriente {
 		this.movimientos = new ArrayList<MovimientoCtaCte>();
 	}
 
-	public void agregarSaldo(float monto){
-
-	}
-	public void restarSaldo(float monto){
-		this.saldo = this.saldo - monto;
-	}
 	public float consultarSaldo(){
-		return 123456;
+		return this.saldo;
+	}
+	
+	public void nuevoMovimientoCarga(Date fecha, float monto, String descripcion) throws CuentaCorrienteException {
+		MovimientoCtaCte mov = new MovimientoCtaCte(this, fecha, monto, descripcion);
+		int id = mov.save();
+		mov.setNroMov(id);
+		this.movimientos.add(mov);
+		this.saldo += monto;
+		this.update();
+	}
+	
+	public void nuevoMovimientoResta(Date fecha, float monto, String descripcion) throws CuentaCorrienteException {
+		MovimientoCtaCte mov = new MovimientoCtaCte(this, fecha, monto, descripcion);
+		int id = mov.save();
+		mov.setNroMov(id);
+		this.movimientos.add(mov);
+		this.saldo -= monto;
+		this.update();
+	}
+	
+	public void update() throws CuentaCorrienteException {
+		CuentaCorrienteDao.getInstancia().update(this);
 	}
 
-	public CuentaCorrienteEntity toEntitySave() {
-		CuentaCorrienteEntity cuentaentity = new CuentaCorrienteEntity(this.fecha, this.especie, this.saldo);
-		if(!this.movimientos.isEmpty() || this.movimientos != null) {
-			for(MovimientoCtaCte m : this.movimientos){
-				MovimientoCtaCteEntity moventity = m.toEntityUpdate();
-				moventity.setCuentaCorriente(cuentaentity);
-				cuentaentity.getMovimientos().add(moventity);
-			}
-		}
-		return cuentaentity;
+	public CuentaCorrienteEntity toEntitySave() {		
+		CuentaCorrienteEntity aux = new CuentaCorrienteEntity();
+		aux.setEspecie(this.especie);
+		aux.setFecha(this.fecha);
+		aux.setSaldo(this.saldo);
+		aux.setMovimientos(this.getMovimientosEntity(aux));
+		return aux;
 	}
 	
 
 	public CuentaCorrienteEntity toEntityUpdate() {
-		CuentaCorrienteEntity cuentaentity = new CuentaCorrienteEntity(this.idCuentaCorriente, this.fecha, this.especie, this.saldo);
-		if(!this.movimientos.isEmpty() || this.movimientos != null) {
-			for(MovimientoCtaCte m : this.movimientos){
-				MovimientoCtaCteEntity moventity = m.toEntityUpdate();
-				moventity.setCuentaCorriente(cuentaentity);
-				cuentaentity.getMovimientos().add(moventity);
-			}
+		CuentaCorrienteEntity aux = new CuentaCorrienteEntity();
+		aux.setEspecie(this.especie);
+		aux.setFecha(this.fecha);
+		aux.setSaldo(this.saldo);
+		aux.setIdCuentaCorriente(this.idCuentaCorriente);
+		aux.setMovimientos(this.getMovimientosEntity(aux));
+		return aux;
+	}
+
+	private List<MovimientoCtaCteEntity> getMovimientosEntity(CuentaCorrienteEntity aux2) {
+		List<MovimientoCtaCteEntity> movimientos = new ArrayList<MovimientoCtaCteEntity>();
+		MovimientoCtaCteEntity aux = new MovimientoCtaCteEntity();
+		for(MovimientoCtaCte mov : this.movimientos) {
+			aux.setFecha(mov.getFecha());
+			aux.setDescripcion(mov.getDescripcion());
+			aux.setMonto(mov.getMonto());
+			aux.setNroMov(mov.getNroMov());
+			aux.setCuentaCorriente(aux2);
+			movimientos.add(aux);
 		}
-		return cuentaentity;
+		return movimientos;
 	}
 
 	public CuentaCorrienteDTO toDTO(){
@@ -117,6 +148,4 @@ public class CuentaCorriente {
 	public void setMovimientos(List<MovimientoCtaCte> movimientos) {
 		this.movimientos = movimientos;
 	}
-
-
 }

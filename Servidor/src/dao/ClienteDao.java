@@ -94,31 +94,4 @@ public class ClienteDao {
 			throw new ClienteException("Error en el borrado del cliente en la BD");
 		}	
 	}
-
-
-	@SuppressWarnings("unused")
-	public void restarSaldo(int cuit, int numero, float total) throws ClienteException, MovimientoException, CuentaCorrienteException {
-		Session session = sf.openSession();
-		session.beginTransaction();
-		MovimientoCtaCteEntity movimiento;
-		movimiento = new MovimientoCtaCteEntity(CuentaCorrienteDao.getInstancia().getCuentaCorrienteByCuit(cuit), numero,(Date)Calendar.getInstance().getTime(),-total,"");
-		if (movimiento == null)
-			throw new MovimientoException("Error al buscar movimiento en la BD.");
-		session.save(movimiento);
-		session.getTransaction().commit();
-		session.flush();
-		ClienteEntity cliente = (ClienteEntity) session.get(ClienteEntity.class, numero);	
-		if (cliente == null)
-			throw new ClienteException("Error al buscar el cliente en la BD");
-		cliente.getCuentaCorriente().getMovimientos().add(movimiento);
-		float nuevoSaldo = cliente.getCuentaCorriente().getSaldo()-total;
-		cliente.getCuentaCorriente().setSaldo(nuevoSaldo);
-		session.beginTransaction();
-		session.update(cliente);
-		session.flush();
-		session.getTransaction().commit();
-		session.close();
-	}
-
-
 }

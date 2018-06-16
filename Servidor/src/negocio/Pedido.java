@@ -115,31 +115,6 @@ public class Pedido {
 		this.cpDirecEnvio = cpDirecEnvio;
 		this.itemsPedido = new ArrayList<ItemPedido>();
 	}
-	
-	public float totalPedido(){
-		return precioTotalFinal;
-	}
-
-	public void actualizarEstado(String estado){
-		this.estado = estado;
-	}
-
-	public void actualizarFechaDespachoPedido(Date fechaDespacho) {
-		this.fechaDespacho = fechaDespacho;
-	}
-
-	public void actualizarFechaEntregaEsperada(Date fechaEntregaEsperada) {
-		this.fechaEntregaEsperada = fechaEntregaEsperada;
-	}
-
-	public void actualizarFechaEntrega(Date fechaEntrega) {
-		this.fechaEntrega = fechaEntrega;
-	}
-
-
-	public float aplicarDescuento(){
-		return (float) 3.14; //VER !!!!
-	}
 
 
 	public PedidoEntity toEntitySave() {
@@ -163,12 +138,11 @@ public class Pedido {
 
 
 	public PedidoDTO toDTO() {	
-		PedidoDTO aux = new PedidoDTO(this.getNroPedido(), this.getEstado(), this.getCliente().toDTO(), this.getFechaGeneracion(), 
-				this.getFechaDespacho(),this.getFechaEntregaEsperada(), this.getFechaEntrega(), 
-				this.getPrecioTotalBruto(), this.getPrecioTotalFinal(), this.getFormaDePago(), 
-				this.getCalleDireccEnvio(), this.getNroDireccEnvio(), 
-				this.getLocalidadDireccEnvio(), this.getCpDirecEnvio(), this.getItemsPedidoDTO());
-		return aux;
+		return new PedidoDTO(this.nroPedido, this.estado, this.cliente.toDTO(), this.fechaGeneracion, 
+				this.fechaDespacho,this.fechaEntregaEsperada, this.fechaEntrega, 
+				this.precioTotalBruto, this.precioTotalFinal, this.formaDePago, 
+				this.calleDireccEnvio, this.nroDireccEnvio, 
+				this.localidadDireccEnvio, this.cpDirecEnvio, this.getItemsPedidoDTO());
 	}
 
 	//Getters y Setters
@@ -230,19 +204,19 @@ public class Pedido {
 	}
 
 	public float getPrecioTotalBruto() {
-		return precioTotalBruto;
-	}
-
-	public void setPrecioTotalBruto(float precioTotalBruto) {
-		this.precioTotalBruto = precioTotalBruto;
+		float total = 0;
+		for (ItemPedido it : this.itemsPedido) {
+			total += (it.getCant() * it.getArticulo().getPrecioVentaUnitario());
+		}
+		return total;
 	}
 
 	public float getPrecioTotalFinal() {
-		return precioTotalFinal;
-	}
-
-	public void setPrecioTotalFinal(float precioTotalFinal) {
-		this.precioTotalFinal = precioTotalFinal;
+		float total = 0;
+		for (ItemPedido it : this.itemsPedido) {
+			total += (it.getCant() * it.getArticulo().getPrecioVentaUnitario());
+		}
+		return total;
 	}
 
 	public String getFormaDePago() {
@@ -315,7 +289,8 @@ public class Pedido {
 			aux.setArticulo(it.getArticulo().toDTO());
 			aux.setCant(it.getCant());
 			aux.setIdItemPedido(it.getIdItemPedido());
-			aux.setIdItemPedido(it.getPedido().getNroPedido());
+			PedidoDTO pedidoDto = new PedidoDTO(nroPedido, estado, cliente.toDTO(), fechaGeneracion, fechaDespacho, fechaEntregaEsperada, fechaEntrega, precioTotalBruto, precioTotalFinal, formaDePago, calleDireccEnvio, nroDireccEnvio, localidadDireccEnvio, cpDirecEnvio);
+			aux.setPedidoDTO(pedidoDto);
 			items.add(aux);
 		}
 		return items;

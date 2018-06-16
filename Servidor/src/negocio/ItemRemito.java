@@ -33,24 +33,23 @@ public class ItemRemito {
 
 	public ItemRemitoEntity toEntitySave() {
 		ItemRemitoEntity aux = new ItemRemitoEntity();
-		aux.setArticulo(this.getArticulo().toEntityUpdate());
-		aux.setCantidad(this.getCant());
-		aux.setPrecio(this.getPrecio());
-		aux.setRemito(this.getRemito().toEntityUpdate());
+		aux.setArticulo(this.articulo.toEntityUpdate());
+		aux.setCantidad(this.cant);
+		aux.setPrecio(this.precio);
+		aux.setRemito(this.remito.toEntityUpdate());
 		return aux;
 	}
 
 
 	public ItemRemitoEntity toEntityUpdate() {
 		ItemRemitoEntity aux = new ItemRemitoEntity();
-		aux.setArticulo(this.getArticulo().toEntityUpdate());
-		aux.setCantidad(this.getCant());
-		aux.setIdItemRemito(this.getIdItemRemito());
-		aux.setPrecio(this.getPrecio());
-		aux.setRemito(this.getRemito().toEntityUpdate());
+		aux.setArticulo(this.articulo.toEntityUpdate());
+		aux.setCantidad(this.cant);
+		aux.setIdItemRemito(this.idItemRemito);
+		aux.setPrecio(this.precio);
+		aux.setRemito(this.remito.toEntityUpdate());
 		return aux;
 	}
-	
 
 
 	public ItemRemitoDTO toDTO() {

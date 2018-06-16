@@ -5,7 +5,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="ItemRemito")
-
 public class ItemRemitoEntity implements Serializable{
 
 	private static final long serialVersionUID = 6874174887111729933L;

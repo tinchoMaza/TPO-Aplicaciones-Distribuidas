@@ -14,6 +14,7 @@ import dto.PedidoDTO;
 import dto.UbicacionDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
+import excepciones.CuentaCorrienteException;
 import excepciones.FacturaException;
 import excepciones.LoteException;
 import excepciones.OrdenDeCompraException;
@@ -43,67 +44,24 @@ public class BusinessDelegate {
 		}
 	}
 	
-	/*************************************************** CLIENTES ************************************************************************************/
-
-	
-	public float limiteCreditoDisponibleCliente(ClienteDTO clienteDTO) throws RemoteException, ClienteException{
-		return ir.limiteCreditoDisponibleCliente(clienteDTO);
-	}
-	
 	
 	/*************************************************** PEDIDOS 
 	 * @throws ArticuloException 
 	 * @throws ClienteException 
 	 * @throws OrdenDePedidoException 
 	 * @throws OrdenDeCompraException 
-	 * @throws ProveedorException ************************************************************************************/
+	 * @throws ProveedorException 
+	 * @throws RemitoException 
+	 * @throws FacturaException 
+	 * @throws CuentaCorrienteException ************************************************************************************/
 	
-	public void altaPedido(List<ItemPedidoDTO> items, String estado, ClienteDTO cliente, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException {
+	public void altaPedido(List<ItemPedidoDTO> items, String estado, ClienteDTO cliente, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException, FacturaException, RemitoException, CuentaCorrienteException {
 		ir.altaPedido(items,  estado,  cliente,  formaDePago,  calleDireccEnvio,  nroDireccEnvio,  localidadDireccEnvio,  cpDirecEnvio);		
-	}
-
-	public void actualizarEstadoPedido(PedidoDTO pedidoDTO, String estado) throws RemoteException, PedidoException {
-		ir.actualizarEstadoPedido(pedidoDTO, estado);
-	}
-	
-	public void actualizarFechaDespachoPedido(PedidoDTO pedidoDTO, Date fechaDespacho) throws RemoteException, PedidoException {
-		ir.actualizarFechaDespachoPedido(pedidoDTO, fechaDespacho);
-	}
-	
-	public void actualizarFechaEntregaEsperada(PedidoDTO pedidoDTO, Date fechaEntregaEsperada) throws RemoteException, PedidoException {
-		ir.actualizarFechaEntregaEsperada(pedidoDTO, fechaEntregaEsperada);
-	}
-	
-	public void actualizarFechaEntrega(PedidoDTO pedidoDTO, Date fechaEntrega) throws RemoteException, PedidoException {
-		ir.actualizarFechaEntrega(pedidoDTO, fechaEntrega);
-	}
-	
-	public List<PedidoDTO> buscarPedidosByCliente(int cuitCliente) throws RemoteException, PedidoException {
-		return ir.buscarPedidosByCliente(cuitCliente);
 	}
 	
 	public List<PedidoDTO> buscarPedidosByEstado(String estado) throws RemoteException, PedidoException{
 		return ir.buscarPedidosByEstado(estado);
 		
-	}
-	
-	
-	
-	/*************************************************** COMPROBANTES 
-	 * @throws RemitoException 
-	 * @throws ClienteException 
-	 * @throws ArticuloException ************************************************************************************/
-	
-	public void emitirComprobante(PedidoDTO pedidoDTO) throws RemoteException, PedidoException, FacturaException, ArticuloException, ClienteException, RemitoException{
-		ir.emitirComprobante(pedidoDTO);
-	}
-	
-	public List<FacturaDTO> buscarFacturaByEstado(String estado) throws RemoteException, FacturaException{
-		return ir.buscarFacturaByEstado(estado);
-	}
-	
-	public void pagarFactura(FacturaDTO facturaDTO) throws RemoteException, ClienteException, FacturaException{
-		ir.pagarFactura(facturaDTO);
 	}
 	
 	/*************************************************** ARTICULOS ************************************************************************************/

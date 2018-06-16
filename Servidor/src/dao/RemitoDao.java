@@ -24,7 +24,7 @@ public class RemitoDao {
 		if (remito != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			int id = (Integer) s.save(remito.toEntitySave());
+			Integer id = (Integer) s.save(remito.toEntitySave());
 			s.flush();
 			s.getTransaction().commit();
 			s.close();
@@ -39,6 +39,7 @@ public class RemitoDao {
 			Session s = sf.openSession();
 			s.beginTransaction();
 			s.update(remito.toEntityUpdate());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}else{

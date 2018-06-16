@@ -11,15 +11,16 @@ import negocio.MovimientoCtaCte;
 @Table(name="MovimientoCtaCte")
 public class MovimientoCtaCteEntity implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7205765250898168265L;
+	
+	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	private int nroMov;
+	
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "idCuentaCorriente")
 	private CuentaCorrienteEntity cuentaCorriente;
-	@Id
-	private int nroMov;
+
 	private Date fecha;
 	private float monto;
 	private String descripcion;

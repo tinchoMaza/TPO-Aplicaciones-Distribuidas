@@ -66,11 +66,10 @@ public class PedidoDao {
 		}	
 	}
 
-	public Pedido buscarPedidoById(Integer idPedido) throws PedidoException{
+	public Pedido buscarPedidoById(int idPedido) throws PedidoException{
 		PedidoEntity aux;
 		Session s = sf.openSession();
-		s.beginTransaction();
-		aux = (PedidoEntity)s.createQuery("Select p From PedidoEntity p where p.nroPedido = ?").setParameter(0, idPedido).uniqueResult();
+		aux = (PedidoEntity) s.createQuery("Select p From PedidoEntity p where p.nroPedido = ?").setParameter(0, idPedido).uniqueResult();
 		if (aux != null) 
 			return aux.toNegocio();
 		else
@@ -81,38 +80,16 @@ public class PedidoDao {
 	public List<Pedido> buscarPedidosByEstado(String estado) throws PedidoException{
 		List<Pedido> devolver = new ArrayList<Pedido>();
 		Session s = sf.openSession();
-		s.beginTransaction();
 		Query query = s.createQuery("Select p From PedidoEntity p where p.estado = ?");
 		query.setParameter(0, estado);
 		List<PedidoEntity> aux = query.list();
 		if (aux != null) {
 			for(PedidoEntity ped : aux)
 				devolver.add(ped.toNegocio());
-			s.flush();
-			s.getTransaction().commit();
-			s.close();
 			return devolver;
 		}else{
 			throw new PedidoException("Error al buscar lista de pedidos en la BD");
 		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Pedido> buscarPedidosByCliente(int cuitCliente) throws PedidoException{
-		List<Pedido> devolver = new ArrayList<Pedido>();
-		List<PedidoEntity> aux = new ArrayList<PedidoEntity>();
-		Session s = sf.openSession();
-		s.beginTransaction();
-		aux = (List<PedidoEntity>)s.createQuery("From Pedido p where p.idCliente = ?").setInteger(0, cuitCliente).list();
-		if (aux != null) {
-			for(PedidoEntity ped : aux)
-				devolver.add(ped.toNegocio());
-			return devolver;
-
-		}else{
-			throw new PedidoException("Error al buscar lista de pedidos en la BD");
-		}
-
 	}
 
 	public List<Pedido> buscarPedidosByEstadoPorOrden(String estado, int nroPedido) throws PedidoException {

@@ -1,21 +1,29 @@
 package controladores;
 import negocio.Pedido;
 import java.util.*;
+
+import javax.swing.JOptionPane;
+
 import dao.ArticuloDao;
 import dao.ClienteDao;
 import dao.PedidoDao;
 import dto.ClienteDTO;
+import dto.FacturaDTO;
 import dto.ItemPedidoDTO;
 import dto.PedidoDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
+import excepciones.CuentaCorrienteException;
+import excepciones.FacturaException;
 import excepciones.OrdenDeCompraException;
 import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
 import excepciones.ProveedorException;
+import excepciones.RemitoException;
 import negocio.Articulo;
 import negocio.Cliente;
 import negocio.CuentaCorriente;
+import negocio.Factura;
 
 public class ControladorClientes {
 
@@ -47,41 +55,16 @@ public class ControladorClientes {
 	}
 
 	public Cliente buscarClienteByDni(int dni) throws ClienteException{
-		for (Cliente c : misClientes)
-		{
-		   if (c.getDni() == dni)
-		      return c;
+		for (Cliente c : misClientes){
+			if (c.getDni() == dni)
+				return c;
 		}
 		
-		Cliente cliente = null;
-		cliente = ClienteDao.getInstancia().buscarClienteByDni(dni);
+		Cliente cliente = ClienteDao.getInstancia().buscarClienteByDni(dni);
 		misClientes.add(cliente);
 		return cliente;
 	}
 
-	public List<PedidoDTO> buscarPedidosByCliente(int dni) throws PedidoException{
-		List<PedidoDTO> devolver = new ArrayList<PedidoDTO>();
-
-		for (Pedido p : pedidosRealizados)
-		{
-		   if (p.getCliente().getDni() == dni) {
-			   devolver.add(p.toDTO());
-		   }
-		}
-		
-		if(!devolver.isEmpty()) {
-			return devolver;
-		}else {
-			List<Pedido> pedidos = null;
-			pedidos = PedidoDao.getInstancia().buscarPedidosByCliente(dni);
-			for(Pedido pedido : pedidos){
-				devolver.add(pedido.toDTO());
-				pedidosRealizados.add(pedido);
-			}
-			return devolver;
-		}
-	}
-	
 	public List<PedidoDTO> buscarPedidosByEstado(String estado) throws PedidoException{
 		List<PedidoDTO> devolver = new ArrayList<PedidoDTO>();
 		List<Pedido> pedidos = PedidoDao.getInstancia().buscarPedidosByEstado(estado);
@@ -90,11 +73,15 @@ public class ControladorClientes {
 		}
 		return devolver;
 	}
+	
+	public Pedido buscarPedidoById(int nroPedido) throws PedidoException {
+		return PedidoDao.getInstancia().buscarPedidoById(nroPedido);
+	}
+
 
 	
 
-
-	public void altaPedido(List<ItemPedidoDTO> itemsPedido, String estado, ClienteDTO clienteDTO, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws ClienteException, ArticuloException, PedidoException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
+	public void altaPedido(List<ItemPedidoDTO> itemsPedido, String estado, ClienteDTO clienteDTO, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws ClienteException, ArticuloException, PedidoException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException, FacturaException, RemitoException, CuentaCorrienteException{
 		if (itemsPedido.size()<=0)
 			throw new PedidoException("El pedido no tiene items asociados");
 		int id;
@@ -121,7 +108,11 @@ public class ControladorClientes {
 		//justo despues de autorizarlo, hay que facturarlo porque se pierde la cantidad de cada item ya que se va restando y muestra la cantidad pendiente
 	}
 
-	public void autorizarPedido(boolean autorizado, PedidoDTO pedido) throws PedidoException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException{
+	public void autorizarPedido(boolean autorizado, PedidoDTO pedido) throws PedidoException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException, ClienteException, FacturaException, RemitoException, CuentaCorrienteException{
+		if (autorizado) {
+			ControladorFacturacion.getInstancia().facturarPedido(ControladorClientes.getInstancia().buscarPedidoById(pedido.getNroPedido()));
+			ControladorFacturacion.getInstancia().generarRemito(ControladorClientes.getInstancia().buscarPedidoById(pedido.getNroPedido()));
+		}
 		boolean memoria = false;
 		for (Pedido p : pedidosRealizados){
 			if (p.getNroPedido() == pedido.getNroPedido() && memoria == false){
@@ -137,7 +128,6 @@ public class ControladorClientes {
 					p.update();
 				}
 			}
-
 		}
 		if (memoria == false){
 			Pedido p = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
@@ -153,11 +143,23 @@ public class ControladorClientes {
 				p.update();
 			}
 		}
-
 	}
-
-
-
-
-
+	
+	//cambiar a objetos facturadto y clientedto
+	public void pagarFactura(int facturaDTO, int clienteDTO) throws FacturaException, ClienteException, CuentaCorrienteException {
+		Factura f = ControladorFacturacion.getInstancia().buscarFacturaById(facturaDTO);
+		Cliente c = this.buscarClienteByDni(clienteDTO);
+		c.pagarFactura(f);
+	}
+	//cambiar a objeto clientedto
+	public void cargarSaldoCliente(int clienteDTO, float monto) throws ClienteException, CuentaCorrienteException {
+		Cliente c = this.buscarClienteByDni(clienteDTO);
+		c.cargarSaldo(monto);
+		JOptionPane.showMessageDialog(null, "Carga de saldo exitosa por un monto de " + monto);
+	}
+	//cambiar a objeto clientedto
+	public void pagoDeFacturas(int clienteDTO) throws ClienteException, FacturaException, CuentaCorrienteException {
+		Cliente c = this.buscarClienteByDni(clienteDTO);
+		c.pagoDeFacturas();
+	}
 }

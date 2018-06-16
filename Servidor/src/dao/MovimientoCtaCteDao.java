@@ -20,14 +20,15 @@ public class MovimientoCtaCteDao {
 		return instancia;
 	}
 
-	public void save(MovimientoCtaCte m) throws CuentaCorrienteException{
+	public int save(MovimientoCtaCte m) throws CuentaCorrienteException{
 		if (m != null){
 			Session session = sf.openSession();
 			session.beginTransaction();
-			session.save(m.toEntitySave());
+			Integer id = (Integer) session.save(m.toEntitySave());
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
+			return id;
 		}else{
 			throw new CuentaCorrienteException("Error en el guardado de un movimiento de cuenta corriente");
 		}
@@ -37,7 +38,6 @@ public class MovimientoCtaCteDao {
 
 	public void update(MovimientoCtaCte m) throws CuentaCorrienteException{
 		if (m != null){
-
 			Session session = sf.openSession();
 			session.beginTransaction();
 			session.update(m.toEntityUpdate());

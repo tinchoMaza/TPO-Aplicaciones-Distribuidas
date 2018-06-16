@@ -45,7 +45,31 @@ public class PedidoDTO implements Serializable{
 		this.itemsPedido = itemsPedido;
 	}
 
+	public PedidoDTO(Integer nroPedido, String estado, ClienteDTO cliente, Date fechaGeneracion, Date fechaDespacho,
+			Date fechaEntregaEsperada, Date fechaEntrega, float precioTotalBruto, float precioTotalFinal,
+			String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio,
+			int cpDirecEnvio) {
+		super();
+		this.nroPedido = nroPedido;
+		this.estado = estado;
+		this.cliente = cliente;
+		this.fechaGeneracion = fechaGeneracion;
+		this.fechaDespacho = fechaDespacho;
+		this.fechaEntregaEsperada = fechaEntregaEsperada;
+		this.fechaEntrega = fechaEntrega;
+		this.precioTotalBruto = precioTotalBruto;
+		this.precioTotalFinal = precioTotalFinal;
+		this.formaDePago = formaDePago;
+		this.calleDireccEnvio = calleDireccEnvio;
+		this.nroDireccEnvio = nroDireccEnvio;
+		this.localidadDireccEnvio = localidadDireccEnvio;
+		this.cpDirecEnvio = cpDirecEnvio;
+		this.itemsPedido = new ArrayList<ItemPedidoDTO>();
+	}
+	
+	
 	//Getters y Setters
+
 
 	public int getNroPedido() {
 		return nroPedido;

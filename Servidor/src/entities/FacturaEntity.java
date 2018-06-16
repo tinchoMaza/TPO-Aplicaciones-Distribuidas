@@ -14,6 +14,7 @@ public class FacturaEntity implements Serializable{
 	private static final long serialVersionUID = 833600540003777158L;
 	
 	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer nroFactura;
 	private Date fecha;
 	private String estado;
@@ -57,7 +58,7 @@ public class FacturaEntity implements Serializable{
 
 	public Factura toNegocio() {
 		Factura factura = new Factura();
-		factura.setCliente(cliente.toNegocio());
+		factura.setCliente(this.cliente.toNegocio());
 		factura.setEstado(this.estado);
 		factura.setFecha(this.fecha);
 		factura.setNroFactura(this.nroFactura);
@@ -69,8 +70,8 @@ public class FacturaEntity implements Serializable{
 	
 	private List<ItemFactura> getItemsNegocio(Factura fac) {
 		List<ItemFactura> list = new ArrayList<ItemFactura>();
-		for (ItemFacturaEntity it : this.getItems()) {
-			it.toNegocio(fac);
+		for (ItemFacturaEntity it : this.items) {
+			list.add(it.toNegocio(fac));
 		}
 		return list;
 	}

@@ -20,7 +20,7 @@ public class RemitoEntity implements Serializable{
 	@JoinColumn (name="idCliente")
 	private ClienteEntity cliente;
 	
-	@OneToOne (cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="idPedido")
 	private PedidoEntity pedido;
 	
@@ -41,6 +41,15 @@ public class RemitoEntity implements Serializable{
 
 	//GETTERS Y SETTERS
 	
+	public RemitoEntity(Integer nroRemito, Date fechaRemito, ClienteEntity cliente, PedidoEntity pedido) {
+		super();
+		this.nroRemito = nroRemito;
+		this.fechaRemito = fechaRemito;
+		this.cliente = cliente;
+		this.pedido = pedido;
+		this.itemsRemito = new ArrayList<ItemRemitoEntity>();
+	}
+
 	public Integer getNroRemito() {
 		return nroRemito;
 	}

@@ -4,6 +4,7 @@ import java.util.*;
 
 import dao.MovimientoCtaCteDao;
 import dto.MovimientoCtaCteDTO;
+import entities.ItemRemitoEntity;
 import entities.MovimientoCtaCteEntity;
 import excepciones.CuentaCorrienteException;
 
@@ -24,16 +25,12 @@ public class MovimientoCtaCte {
 		this.descripcion = descripcion;
 	}
 
-	public MovimientoCtaCte(int nroMov, Date fecha, float monto, String descripcion) {
+	public MovimientoCtaCte(CuentaCorriente cuentaCorriente, Date fecha, float monto, String descripcion) {
 		super();
-		this.nroMov = nroMov;
+		this.cuentaCorriente = cuentaCorriente;
 		this.fecha = fecha;
 		this.monto = monto;
 		this.descripcion = descripcion;
-	}
-
-	public void saveMov(int nroMov){
-
 	}
 
 	//Getters y Setters
@@ -79,21 +76,18 @@ public class MovimientoCtaCte {
 	}
 	
 	public MovimientoCtaCteEntity toEntitySave() {
-		return new MovimientoCtaCteEntity(null, this.fecha, this.monto, this.descripcion);
+		return new MovimientoCtaCteEntity(this.cuentaCorriente.toEntityUpdate(), this.fecha, this.monto, this.descripcion);
 	}
 
 	public MovimientoCtaCteEntity toEntityUpdate() {
-		return new MovimientoCtaCteEntity(null, this.nroMov, this.fecha, this.monto, this.descripcion); // aca se necesitara la cuenta corriente? 
+		return new MovimientoCtaCteEntity(this.cuentaCorriente.toEntityUpdate(), this.nroMov, this.fecha, this.monto, this.descripcion);
 	}
 
 	public MovimientoCtaCteDTO toDTO() {		
 		return new MovimientoCtaCteDTO(null, this.nroMov, this.fecha, this.monto, this.descripcion);
 	}
 
-	public void save() throws CuentaCorrienteException {
-		MovimientoCtaCteDao.getInstancia().save(this);
+	public int save() throws CuentaCorrienteException {
+		return MovimientoCtaCteDao.getInstancia().save(this);
 	}
-
-
-
 }

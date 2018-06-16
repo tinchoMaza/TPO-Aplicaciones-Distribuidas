@@ -17,7 +17,7 @@ public class ItemFacturaEntity implements Serializable{
 	private Integer idItemFactura;
 	
 	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn (name = "idFactura") //si no funciona con (name = idFactura), es (name = nroFactura)
+	@JoinColumn (name = "idFactura")
 	private FacturaEntity factura;
 	
 	@OneToOne
@@ -31,7 +31,7 @@ public class ItemFacturaEntity implements Serializable{
 	
 	
 	public ItemFactura toNegocio(Factura fac) {
-		ItemFactura aux = new ItemFactura(fac,this.getCantidad(), this.getArticulo().toNegocio(), this.getPrecio(), this.getIdItemFactura());
+		ItemFactura aux = new ItemFactura(fac,this.cantidad, this.articulo.toNegocio(), this.precio, this.idItemFactura);
 		return aux;
 	}
 
@@ -77,6 +77,4 @@ public class ItemFacturaEntity implements Serializable{
 	public void setPrecio(float precio) {
 		this.precio = precio;
 	}
-
-	
 }

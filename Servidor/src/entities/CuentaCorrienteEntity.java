@@ -2,9 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.util.*;
-
 import javax.persistence.*;
-
 import negocio.CuentaCorriente;
 import negocio.MovimientoCtaCte;
 
@@ -13,8 +11,11 @@ import negocio.MovimientoCtaCte;
 public class CuentaCorrienteEntity implements Serializable{
 	
 	private static final long serialVersionUID = -7035154393489168267L;
+	
 	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer idCuentaCorriente;
+	
 	private Date fecha;
 	private String especie;
 	private float saldo;
@@ -67,7 +68,7 @@ public class CuentaCorrienteEntity implements Serializable{
 	private List<MovimientoCtaCte> getMovimientosEntity(CuentaCorriente ctaCte) {
 		List<MovimientoCtaCte> list = new ArrayList<MovimientoCtaCte>();
 		for(MovimientoCtaCteEntity m : this.movimientos) {
-			MovimientoCtaCte movCtaCte = m.toNegocio(ctaCte);
+			MovimientoCtaCte movCtaCte = new MovimientoCtaCte(ctaCte, m.getNroMov(), m.getFecha(), m.getMonto(), m.getDescripcion());
 			list.add(movCtaCte);
 		}	
 		return list;

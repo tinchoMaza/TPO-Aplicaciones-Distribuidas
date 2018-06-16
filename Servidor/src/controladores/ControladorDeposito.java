@@ -2,8 +2,6 @@ package controladores;
 
 import java.util.*;
 
-import javax.swing.JOptionPane;
-
 import dao.ArticuloDao;
 import dao.ArticuloDepositoDao;
 import dao.OrdenDePedidoDao;
@@ -11,7 +9,6 @@ import dao.PedidoDao;
 import dao.ProveedoresDao;
 import dao.UbicacionDao;
 import dto.ArticuloDTO;
-import dto.PedidoDTO;
 import dto.UbicacionDTO;
 import excepciones.ArticuloException;
 import excepciones.OrdenDeCompraException;
@@ -103,7 +100,6 @@ public class ControladorDeposito {
 		for (ItemPedido it: pedido.getItemsPedido()){
 			stockTotal = getCantidadStockTotal(it.getArticulo());
 			int cantTemp = it.getCant();
-			JOptionPane.showMessageDialog(null, "stock total " + stockTotal + " cant temp " + cantTemp + "  del articulo " + it.getArticulo().getIdArticulo());
 			if (stockTotal >= cantTemp){
 				for (Ubicacion u: ubicaciones){
 					for (ArticuloDeposito a : u.getArticulos()){
@@ -215,7 +211,6 @@ public class ControladorDeposito {
 
 	}
 	public void cargarTodasUbicacionesYArticulos() {
-		JOptionPane.showMessageDialog(null, "CARGANDO UBICACIONES Y ARTICULOS");
 		List<Ubicacion> ubs = UbicacionDao.getInstancia().cargarUbicaciones();
 		List<ArticuloDeposito> arts = ArticuloDepositoDao.getInstancia().cargarArticulosDeposito();
 		for (Ubicacion u : ubs) {
@@ -227,7 +222,7 @@ public class ControladorDeposito {
 	}
 
 
-	public void retirar(PedidoDTO pedido) throws UbicacionException{ 
+	public void retirar(Pedido pedido) throws UbicacionException{ 
 		for (Ubicacion u : ubicaciones){
 			for (ArticuloDeposito art : u.getArticulos()){
 				if (art.getReservaIdPedido() == pedido.getNroPedido()){

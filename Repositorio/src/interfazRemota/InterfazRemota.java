@@ -3,7 +3,6 @@ package interfazRemota;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import dto.ArticuloDTO;
@@ -14,6 +13,7 @@ import dto.PedidoDTO;
 import dto.UbicacionDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
+import excepciones.CuentaCorrienteException;
 import excepciones.FacturaException;
 import excepciones.LoteException;
 import excepciones.OrdenDeCompraException;
@@ -25,43 +25,19 @@ import excepciones.UbicacionException;
 
 public interface InterfazRemota extends Remote {
 	
-	/*************************************************** CLIENTES ************************************************************************************/
-	
-	
-	public abstract float limiteCreditoDisponibleCliente(ClienteDTO clienteDTO) throws RemoteException, ClienteException;
-	
 	/*************************************************** PEDIDOS 
 	 * @throws ArticuloException 
 	 * @throws ClienteException 
 	 * @throws OrdenDePedidoException 
 	 * @throws OrdenDeCompraException 
-	 * @throws ProveedorException ************************************************************************************/
+	 * @throws ProveedorException 
+	 * @throws RemitoException 
+	 * @throws FacturaException 
+	 * @throws CuentaCorrienteException ************************************************************************************/
 	
-	public abstract void altaPedido(List<ItemPedidoDTO> items, String estado, ClienteDTO cliente, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException;
-	
-	public abstract void actualizarEstadoPedido(PedidoDTO pedidoDTO, String estado) throws RemoteException, PedidoException;
-	
-	public abstract void actualizarFechaDespachoPedido(PedidoDTO pedidoDTO, Date fechaDespacho) throws RemoteException, PedidoException;
-	
-	public abstract void actualizarFechaEntregaEsperada(PedidoDTO pedidoDTO, Date fechaEntregaEsperada) throws RemoteException, PedidoException;
-	
-	public abstract void actualizarFechaEntrega(PedidoDTO pedidoDTO, Date fechaEntrega) throws RemoteException, PedidoException;
-	
-	public abstract List<PedidoDTO> buscarPedidosByCliente(int cuitCliente) throws RemoteException, PedidoException;
+	public abstract void altaPedido(List<ItemPedidoDTO> items, String estado, ClienteDTO cliente, String formaDePago, String calleDireccEnvio, int nroDireccEnvio, String localidadDireccEnvio, int cpDirecEnvio) throws RemoteException, PedidoException, ClienteException, ArticuloException, OrdenDePedidoException, ProveedorException, OrdenDeCompraException, FacturaException, RemitoException, CuentaCorrienteException;
 	
 	public abstract List<PedidoDTO> buscarPedidosByEstado(String estado) throws RemoteException, PedidoException;
-	
-	
-	/*************************************************** COMPROBANTES 
-	 * @throws RemitoException 
-	 * @throws ClienteException 
-	 * @throws ArticuloException ************************************************************************************/
-	
-	public abstract void emitirComprobante(PedidoDTO pedidoDTO) throws RemoteException, PedidoException, FacturaException, ArticuloException, ClienteException, RemitoException;
-	
-	public abstract List<FacturaDTO> buscarFacturaByEstado(String estado) throws RemoteException, FacturaException;
-	
-	public abstract void pagarFactura(FacturaDTO facturaDTO) throws RemoteException, ClienteException, FacturaException;
 	
 	
 	/*************************************************** ARTICULOS ************************************************************************************/

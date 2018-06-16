@@ -41,6 +41,7 @@ public class CuentaCorrienteDao {
 			Session s = sf.openSession();
 			s.beginTransaction();
 			s.update(cuentaCorriente.toEntityUpdate());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}

@@ -4,11 +4,6 @@ import java.util.*;
 import dao.ArticuloDao;
 import dao.ClienteDao;
 import dao.FacturaDao;
-import dao.PedidoDao;
-import dto.ClienteDTO;
-import dto.FacturaDTO;
-import dto.ItemPedidoDTO;
-import dto.PedidoDTO;
 import excepciones.ArticuloException;
 import excepciones.ClienteException;
 import excepciones.FacturaException;
@@ -17,6 +12,7 @@ import excepciones.RemitoException;
 import negocio.Articulo;
 import negocio.Cliente;
 import negocio.Factura;
+import negocio.ItemPedido;
 import negocio.Pedido;
 import negocio.Remito;
 
@@ -35,81 +31,48 @@ public class ControladorFacturacion {
 
 	}
 
-	private List<Factura> misFacturas;
-	private List<Remito> misRemitos;
+	private List<Factura> misFacturas = new ArrayList<Factura>();
+	private List<Remito> misRemitos = new ArrayList<Remito>();
 
-	public void emitirComprobantes(PedidoDTO pedido) throws PedidoException, ArticuloException, ClienteException, FacturaException, RemitoException{
-		Pedido pedidoNegocio = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
-		ControladorFacturacion.getInstancia().facturarPedido(pedidoNegocio);
-		ControladorFacturacion.getInstancia().generarRemito(pedidoNegocio);
-	}
 
-	public void facturarPedido(Pedido pedido) throws PedidoException, ArticuloException, FacturaException{
-		Date fecha = new Date();
-		Pedido pedidoNegocio = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
-		Factura factura = new Factura(fecha, pedidoNegocio, pedidoNegocio.getCliente(), pedidoNegocio.getPrecioTotalFinal(), "IMPAGA");
+	public void facturarPedido(Pedido pedido) throws PedidoException, ArticuloException, FacturaException, ClienteException{
+		Date fecha = Calendar.getInstance().getTime();
+		Cliente clienteNegocio = ClienteDao.getInstancia().buscarClienteByDni(pedido.getCliente().getDni());
+		Factura factura = new Factura(fecha, pedido, clienteNegocio, pedido.getPrecioTotalFinal());
 		int id = factura.save();
 		factura.setNroFactura(id);
-		for(ItemPedidoDTO item : pedido.getItemsPedidoDTO()){
+		for(ItemPedido item : pedido.getItemsPedido()){
 			Articulo art = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
-			factura.nuevoItemFact(art, item.getCant(), item.getArticulo().getPrecioVentaUnitario());
+			factura.nuevoItemFact(art, item.getCant(), (art.getPrecioVentaUnitario() * item.getCant()));
 		}
-	
 		misFacturas.add(factura);
 	}
-	
-	
+
+
 	public void generarRemito(Pedido pedido) throws PedidoException, ClienteException, ArticuloException, RemitoException{
-		Date fecha = new Date();
-		Pedido pedidoNegocio = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
-		Cliente clienteNegocio = null;
-		clienteNegocio = ClienteDao.getInstancia().buscarClienteByDni(pedido.getCliente().getDni());
-		Remito remito = new Remito(fecha, clienteNegocio, pedidoNegocio, null);
+		Date fecha = Calendar.getInstance().getTime();
+		Cliente clienteNegocio = ClienteDao.getInstancia().buscarClienteByDni(pedido.getCliente().getDni());
+		Remito remito = new Remito(fecha, clienteNegocio, pedido);
 		int id = remito.save();
 		remito.setNroRemito(id);
-		for(ItemPedidoDTO item : pedido.getItemsPedidoDTO()) {
+		for(ItemPedido item : pedido.getItemsPedido()) {
 			Articulo art = ArticuloDao.getInstancia().buscarArticuloById(item.getArticulo().getIdArticulo()); 
-			remito.nuevoItemRem(art, item.getCant(), item.getArticulo().getPrecioVentaUnitario());
+			remito.nuevoItemRem(art, item.getCant(), (art.getPrecioVentaUnitario() * item.getCant()));
 		}
-
 		misRemitos.add(remito);
 	}
 
-
-	public List<FacturaDTO> buscarFacturaByEstado(String estado) throws FacturaException{
-		List<FacturaDTO> devolver = new ArrayList<FacturaDTO>();
-		List<Factura> facturas = FacturaDao.getInstancia().buscarFacturasByEstado(estado);
-		for(Factura fac : facturas){
-			devolver.add(fac.toDTO());
-		}
-		return devolver;
+	public Factura buscarFacturaById(int nroFactura) throws FacturaException {
+		for (Factura f : misFacturas)
+			if (f.getNroFactura() == nroFactura)
+				return f;
+		
+		Factura factura = FacturaDao.getInstancia().buscarFacturaById(nroFactura);
+		misFacturas.add(factura);
+		return factura;
 	}
-
-
-	public float limiteCreditoDisponible(ClienteDTO clienteDTO) throws ClienteException{
-		float saldoDisponible = 0;
-		Cliente cliente = ClienteDao.getInstancia().buscarClienteByDni(clienteDTO.getDni());
-		saldoDisponible = cliente.consultarSaldo();
-		return saldoDisponible;
+	
+	public List<Factura> buscarFacturasByCliente(int dni) throws FacturaException{
+		return FacturaDao.getInstancia().buscarFacturasByCliente(dni);
 	}
-
-	public void pagar(FacturaDTO facturaDTO) throws FacturaException {
-		int nroFactura = facturaDTO.getNroFactura();
-		int flag = 0;
-		for(Factura fac : misFacturas) {
-			if(fac.getNroFactura() == nroFactura) {
-				flag = 1;
-				fac.pagar();
-				fac.update();
-				break;
-			}
-		}
-		if(flag == 0) {
-			Factura factura = FacturaDao.getInstancia().buscarFacturaById(nroFactura);
-			factura.pagar();
-			misFacturas.add(factura);
-			factura.update();
-		}
-	}
-
 }

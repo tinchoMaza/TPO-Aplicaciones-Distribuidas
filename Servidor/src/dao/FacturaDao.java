@@ -3,6 +3,10 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import entities.FacturaEntity;
@@ -28,7 +32,8 @@ public class FacturaDao {
 		if (factura != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
-			int nroFactura = (Integer) s.save(factura.toEntitySave());
+			Integer nroFactura = (Integer) s.save(factura.toEntitySave());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 			return nroFactura;
@@ -37,28 +42,10 @@ public class FacturaDao {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Factura> buscarFacturasByEstado(String estado) throws FacturaException{
-		List<FacturaEntity> aux = new ArrayList<FacturaEntity>();
-		List<Factura> devolver = new ArrayList<Factura>();
-		Session s = sf.openSession();
-		s.beginTransaction();
-		aux = (List<FacturaEntity>) s.createQuery("Select f from FacturaEntity f where f.estado = ?").setString(0, estado).list();
-		if (aux != null){
-			for(FacturaEntity fac : aux)
-				devolver.add(fac.toNegocio());
-			return devolver;
-		}else{
-			throw new FacturaException("Error al obtener la lista de Facturas en la BD");
-		}
-
-	}
-
 	public Factura buscarFacturaById(int idFactura) throws FacturaException{
 		FacturaEntity aux = new FacturaEntity();
 		Session s = sf.openSession();
-		s.beginTransaction();
-		aux = (FacturaEntity)s.createQuery("From Factura f where f.idFactura = ?").setInteger(0, idFactura).uniqueResult();
+		aux = (FacturaEntity) s.createQuery("select f from FacturaEntity f where f.nroFactura=?").setParameter(0, idFactura).uniqueResult();
 		if (aux == null)
 			throw new FacturaException("Error al buscar la Factura en la BD");
 		else
@@ -67,10 +54,10 @@ public class FacturaDao {
 
 	public void update(Factura factura) throws FacturaException {
 		if (factura != null){
-			FacturaEntity aux = factura.toEntityUpdate();
 			Session s = sf.openSession();
 			s.beginTransaction();
-			s.update(aux);
+			s.update(factura.toEntityUpdate());
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}else{
@@ -89,6 +76,27 @@ public class FacturaDao {
 		} else {
 			throw new FacturaException("Error en el borrado de factura en la BD");
 		}	
+	}
+
+	@SuppressWarnings({ "unchecked", "unused" })
+	public List<Factura> buscarFacturasByCliente(int dni) throws FacturaException {
+		List<Factura> devolver = new ArrayList<Factura>();
+		Session s = sf.openSession();
+		s.beginTransaction();
+		Query query =  s.createQuery("select f from FacturaEntity f order by f.nroFactura");
+		List<FacturaEntity> aux = query.list();
+		if (aux != null){
+			for(FacturaEntity fac : aux) {
+				if(fac.getEstado().equals("IMPAGA") && fac.getCliente().getDni() == dni)
+					devolver.add(fac.toNegocio());
+			}
+			s.flush();
+			s.getTransaction().commit();
+			s.close();
+			return devolver;
+		}else{
+			throw new FacturaException("Error al obtener la lista de Facturas en la BD");
+		}
 	}
 
 }

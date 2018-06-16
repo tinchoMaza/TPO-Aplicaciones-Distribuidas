@@ -3,9 +3,13 @@ package negocio;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 import dao.RemitoDao;
 import dto.ItemRemitoDTO;
 import dto.RemitoDTO;
+import entities.FacturaEntity;
+import entities.ItemFacturaEntity;
 import entities.ItemRemitoEntity;
 import entities.RemitoEntity;
 import excepciones.RemitoException;
@@ -18,9 +22,8 @@ public class Remito {
 	private Pedido pedido;
 	private List<ItemRemito> itemsRemito;
 
-	public Remito(Integer nroRemito, Date fechaRemito, Cliente cliente, Pedido pedido) {
+	public Remito(Date fechaRemito, Cliente cliente, Pedido pedido) {
 		super();
-		this.nroRemito = nroRemito;
 		this.fechaRemito = fechaRemito;
 		this.cliente = cliente;
 		this.pedido = pedido;
@@ -44,45 +47,46 @@ public class Remito {
 		this.itemsRemito = itemsRemito;
 	}
 	
-	public RemitoEntity toEntitySave() {
+	public RemitoEntity toEntitySave() {		
 		RemitoEntity aux = new RemitoEntity();
-		aux.setCliente(this.getCliente().toEntity());
-		aux.setFechaRemito(this.getFechaRemito());
+		aux.setCliente(this.cliente.toEntity());
+		aux.setFechaRemito(this.fechaRemito);
 		aux.setItemsRemito(this.getItemsRemitoEntity());
-		aux.setPedido(this.getPedido().toEntityUpdate());
+		aux.setPedido(this.pedido.toEntityUpdate());
 		return aux;
 
 	}
 
 	public RemitoEntity toEntityUpdate() {
 		RemitoEntity aux = new RemitoEntity();
-		aux.setCliente(this.getCliente().toEntity());
-		aux.setFechaRemito(this.getFechaRemito());
+		aux.setCliente(this.cliente.toEntity());
+		aux.setFechaRemito(this.fechaRemito);
 		aux.setItemsRemito(this.getItemsRemitoEntity());
-		aux.setNroRemito(this.getNroRemito());
-		aux.setPedido(this.getPedido().toEntityUpdate());
+		aux.setNroRemito(this.nroRemito);
+		aux.setPedido(this.pedido.toEntityUpdate());
 		return aux;
 
 	}
-
-
 	
 	public RemitoDTO toDTO() {
 		RemitoDTO aux = new RemitoDTO();
-		aux.setClienteDTO(this.getCliente().toDTO());
-		aux.setFechaRemito(this.getFechaRemito());
+		aux.setClienteDTO(this.cliente.toDTO());
+		aux.setFechaRemito(this.fechaRemito);
 		aux.setItemsRemitoDTO(this.getItemsRemitoDTO());
-		aux.setNroRemito(this.getNroRemito());
-		aux.setPedidoDTO(this.getPedido().toDTO());
+		aux.setNroRemito(this.nroRemito);
+		aux.setPedidoDTO(this.pedido.toDTO());
 		return aux;
 	}
 
 	public Remito() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	public float total(){
-		return 0;
+		float total = 0;
+		for (ItemRemito it : this.itemsRemito)
+			total += (it.getCant() * it.getArticulo().getPrecioVentaUnitario());
+		return total;
 	}
 
 	public void nuevoItemRem(Articulo articulo, int cant, float precio) throws RemitoException{
@@ -90,7 +94,6 @@ public class Remito {
 		int id = item.save();
 		item.setIdItemRemito(id);
 		itemsRemito.add(item);
-
 	}
 
 	public int save() throws RemitoException{
@@ -136,11 +139,18 @@ public class Remito {
 	}
 
 	public List<ItemRemitoEntity> getItemsRemitoEntity() {
-		List<ItemRemitoEntity> it = new ArrayList<ItemRemitoEntity>();
-		for (ItemRemito a : this.getItemsRemito()){
-			it.add(a.toEntityUpdate());
+		List<ItemRemitoEntity> items = new ArrayList<ItemRemitoEntity>();
+		ItemRemitoEntity aux = new ItemRemitoEntity();
+		for(ItemRemito item: itemsRemito){
+			aux.setArticulo(item.getArticulo().toEntityUpdate());
+			aux.setCantidad(item.getCant());
+			aux.setPrecio(item.getPrecio());
+			aux.setIdItemRemito(item.getIdItemRemito());
+			RemitoEntity remEntity = new RemitoEntity(this.nroRemito, this.fechaRemito, this.cliente.toEntity(), this.pedido.toEntityUpdate());
+			aux.setRemito(remEntity);
+			items.add(aux);
 		}
-		return it;
+		return items;
 	}
 
 	public List<ItemRemitoDTO> getItemsRemitoDTO() {

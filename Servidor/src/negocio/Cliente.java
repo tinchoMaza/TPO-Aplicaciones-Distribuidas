@@ -1,9 +1,16 @@
 package negocio;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import controladores.ControladorFacturacion;
 import dao.ClienteDao;
 import dto.ClienteDTO;
 import entities.ClienteEntity;
 import excepciones.ClienteException;
+import excepciones.CuentaCorrienteException;
+import excepciones.FacturaException;
 
 public class Cliente {
 
@@ -38,16 +45,7 @@ public class Cliente {
 		this.cpDom = cpDom;
 	}
 	public Cliente() {
-		// TODO Auto-generated constructor stub
-	}
-	public float consultarSaldo(){
-		return 123456;
-	}
-	public void agregarSaldo(float monto){
-
-	}
-	public void restarSaldo(float monto){
-		this.cuentaCorriente.restarSaldo(monto);
+		super();
 	}
 
 	public ClienteEntity toEntity(){
@@ -164,5 +162,31 @@ public class Cliente {
 		this.cpDom = cpDom;
 	}
 
-
+	public void pagarFactura(Factura factura) throws FacturaException, CuentaCorrienteException {
+		//genera dos movimientos: uno carga saldo y otro resta. ambos por el valor de la factura aplicandole un descuento
+		float desc = 10;
+		factura.aplicarDescuento(desc);
+		Date fecha = Calendar.getInstance().getTime();
+		this.cuentaCorriente.nuevoMovimientoCarga(fecha, factura.getTotalFact(), "Carga de saldo para pago de factura numero " + factura.getNroFactura());
+		this.cuentaCorriente.nuevoMovimientoResta(fecha, factura.getTotalFact(), "Pago con descuento de factura numero " + factura.getNroFactura());
+		factura.setEstado("PAGADA");
+		factura.update();
+	}
+	
+	public void cargarSaldo(float monto) throws CuentaCorrienteException {
+		Date fecha = Calendar.getInstance().getTime();
+		this.cuentaCorriente.nuevoMovimientoCarga(fecha, monto, "Carga de saldo");
+	}
+	
+	public void pagoDeFacturas() throws FacturaException, CuentaCorrienteException {
+		List<Factura> facturas = ControladorFacturacion.getInstancia().buscarFacturasByCliente(this.dni);
+		Date fecha = Calendar.getInstance().getTime();
+		for(Factura f : facturas) {
+			if(this.cuentaCorriente.consultarSaldo() >= f.getTotalFact()){
+				this.cuentaCorriente.nuevoMovimientoResta(fecha, f.getTotalFact(), "Pago de factura numero " + f.getNroFactura());
+				f.setEstado("PAGADA");
+				f.update();
+			}
+		}
+	}
 }

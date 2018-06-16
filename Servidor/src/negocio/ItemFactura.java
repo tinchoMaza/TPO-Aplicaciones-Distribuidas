@@ -20,7 +20,15 @@ public class ItemFactura {
 		this.cantidad = cantidad;
 		this.articulo = articulo;
 		this.precioSubTotal = precioSubTotal;
-		IdItemFact = idItemFact;
+		this.IdItemFact = idItemFact;
+	}
+
+	public ItemFactura(Factura factura, int cantidad, Articulo articulo, float precioSubTotal) {
+		super();
+		this.factura = factura;
+		this.cantidad = cantidad;
+		this.articulo = articulo;
+		this.precioSubTotal = precioSubTotal;
 	}
 
 
@@ -34,20 +42,20 @@ public class ItemFactura {
 
 	public ItemFacturaEntity toEntityUpdate(){
 		ItemFacturaEntity aux = new ItemFacturaEntity();
-		aux.setArticulo(this.getArticulo().toEntityUpdate());
-		aux.setCantidad(this.getCantidad());
-		aux.setFactura(this.getFactura().toEntityUpdate());
-		aux.setIdItemFactura(this.getIdItemFact());
-		aux.setPrecio(this.getPrecioSubTotal());
+		aux.setArticulo(this.articulo.toEntityUpdate());
+		aux.setCantidad(this.cantidad);
+		aux.setFactura(this.factura.toEntityUpdate());
+		aux.setIdItemFactura(this.IdItemFact);
+		aux.setPrecio(this.precioSubTotal);
 		return aux;
 	}
 
 	public ItemFacturaEntity toEntitySave(){
 		ItemFacturaEntity aux = new ItemFacturaEntity();
-		aux.setArticulo(this.getArticulo().toEntityUpdate());
-		aux.setCantidad(this.getCantidad());
-		aux.setFactura(this.getFactura().toEntityUpdate());
-		aux.setPrecio(this.getPrecioSubTotal());
+		aux.setArticulo(this.articulo.toEntityUpdate());
+		aux.setCantidad(this.cantidad);
+		aux.setFactura(this.factura.toEntityUpdate());
+		aux.setPrecio(this.precioSubTotal);
 		return aux;
 	}
 	

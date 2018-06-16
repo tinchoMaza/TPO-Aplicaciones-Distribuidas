@@ -22,9 +22,19 @@ public class ControladorDespacho {
 		return instancia;
 	}
 
-	public void despachar(PedidoDTO pedido) throws UbicacionException, PedidoException, ArticuloException, ClienteException, FacturaException, RemitoException {
+	public void despachar(PedidoDTO pedidoDTO) throws UbicacionException, PedidoException, ArticuloException, ClienteException, FacturaException, RemitoException {
+		//TENGO QUE PASARLES UN PEDIDO Y NO EL PARAMETRO DE ARRIBA QUE ES DTO
+		Pedido pedido = ControladorClientes.getInstancia().buscarPedidoById(pedidoDTO.getNroPedido());
 		ControladorDeposito.getInstancia().retirar(pedido);
-		ControladorFacturacion.getInstancia().emitirComprobantes(pedido);	
+		ControladorFacturacion.getInstancia().generarRemito(pedido);
+		//actualizar fechas de despacho y entrega esperada del pedido
+		Date fechaDespacho = Calendar.getInstance().getTime();
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, 20);
+		Date fechaEntregaEsperada = c.getTime();
+		pedido.setFechaEntregaEsperada(fechaEntregaEsperada);
+		pedido.setFechaDespacho(fechaDespacho);
+		pedido.update();
 	}
 
 	public List<PedidoDTO> listarPedidosDespacho() throws PedidoException{
@@ -34,41 +44,6 @@ public class ControladorDespacho {
 			devolver.add(pedido.toDTO());
 		}
 		return devolver;
-	}
-
-	public void actualizarEstadoDelPedido(String estado, PedidoDTO pedidoDTO) throws PedidoException{
-		Pedido pedido = null;
-		pedido = PedidoDao.getInstancia().buscarPedidoById(pedidoDTO.getNroPedido());
-		pedido.setEstado(estado);
-		PedidoDao.getInstancia().update(pedido);
-		//modificar el array pedidosRealizados en ControladorClientes
-	}
-
-	public  void actualizarFechaDespachoPedido(PedidoDTO pedidoDTO, java.util.Date fechaDespacho) throws PedidoException {
-		Pedido pedido = null;
-		pedido = PedidoDao.getInstancia().buscarPedidoById(pedidoDTO.getNroPedido());
-		pedido.actualizarFechaDespachoPedido(fechaDespacho);
-		pedido.update();
-		//modificar el array pedidosRealizados en ControladorClientes
-	}
-
-	public  void actualizarFechaEntregaEsperada(PedidoDTO pedidoDTO, java.util.Date fechaEntregaEsperada) throws PedidoException {
-		Pedido pedido = null;
-		pedido = PedidoDao.getInstancia().buscarPedidoById(pedidoDTO.getNroPedido());
-		pedido.actualizarFechaEntregaEsperada(fechaEntregaEsperada);
-		pedido.update();
-		//modificar el array pedidosRealizados en ControladorClientes
-
-	}
-
-	public  void actualizarFechaEntrega(PedidoDTO pedidoDTO, java.util.Date fechaEntrega) throws PedidoException  {
-		Pedido pedido = null;
-		pedido = PedidoDao.getInstancia().buscarPedidoById(pedidoDTO.getNroPedido());
-		pedido.actualizarFechaEntrega(fechaEntrega);
-		pedido.update();
-		//modificar el array pedidosRealizados en ControladorClientes
-
-
 	}
 
 }
