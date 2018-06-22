@@ -17,7 +17,7 @@ public class OrdenDePedidoEntity implements Serializable {
 	@Column (name="idOp")
 	private Integer idOP;
 	
-	@OneToOne (cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToOne (cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn (name="nroPedido")
 	private PedidoEntity pedido;
 	

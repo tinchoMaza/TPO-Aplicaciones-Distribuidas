@@ -2,9 +2,18 @@ package dao;
 
 import hibernate.HibernateUtil;
 import negocio.Articulo;
+import negocio.Pedido;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
+
+import entities.ArticuloDepositoEntity;
 import entities.ArticuloEntity;
 import excepciones.ArticuloException;
 
@@ -69,6 +78,24 @@ public class ArticuloDao {
 			throw new ArticuloException("Error en la busqueda del Articulo en la BD");
 		else
 			return ar.toNegocio();	
+	}
+
+	public int cantidadReservada(int nroPedido, int idArticulo) {
+		Session s = sf.openSession();
+		s.beginTransaction();
+		Query query = s.createQuery("select a from ArticuloDepositoEntity a");
+		@SuppressWarnings("unchecked")
+		List<ArticuloDepositoEntity> arts = query.list();
+		s.flush();
+		s.getTransaction().commit();
+		s.close();
+		int aux=0;
+		for(ArticuloDepositoEntity a : arts) {
+			if((a.getReservaIdPedido() != null && a.getReservaIdPedido() == nroPedido) && a.getArticulo().getIdArticulo() == idArticulo)
+				aux++;
+		}
+		return aux;
+	
 	}
 
 

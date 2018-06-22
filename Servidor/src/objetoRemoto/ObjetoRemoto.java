@@ -94,9 +94,10 @@ public class ObjetoRemoto extends UnicastRemoteObject implements InterfazRemota 
 	 * @throws LoteException 
 	 * @throws ArticuloException 
 	 * @throws SQLException 
-	 * @throws PedidoException ***********************************************************************************************************************************************************************************************************************************************************************************************/
+	 * @throws PedidoException 
+	 * @throws OrdenDePedidoException ***********************************************************************************************************************************************************************************************************************************************************************************************/
 	@Override
-	public void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException {
+	public void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException, OrdenDePedidoException {
 		ControladorCompras.getInstancia().procesarOC(idOC);
 		
 	}

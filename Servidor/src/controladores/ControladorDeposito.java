@@ -2,6 +2,8 @@ package controladores;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 import dao.ArticuloDao;
 import dao.ArticuloDepositoDao;
 import dao.OrdenDePedidoDao;
@@ -39,7 +41,7 @@ public class ControladorDeposito {
 	private List<Ubicacion> ubicaciones = new ArrayList<Ubicacion>();
 	private List<OrdenDePedido> orDePedidos = new ArrayList<OrdenDePedido>();
 	
-	public void completarPedidosRestantes(int nroPedido) throws PedidoException, ArticuloException {
+	public void completarPedidosRestantes(int nroPedido) throws PedidoException, ArticuloException, OrdenDePedidoException {
 		//este se llama para buscar todos los pedidos que no generaron una orden de pedido porque ya existia una para determinado articulo
 		List<Pedido> pedidosRestantes = PedidoDao.getInstancia().buscarPedidosByEstadoPorOrden("APROBADO_EN_ESPERA_STOCK", nroPedido);
 		for(Pedido p : pedidosRestantes) {
@@ -47,13 +49,13 @@ public class ControladorDeposito {
 		}
 	}
 
-	public void completarPedido(Pedido pedido) throws PedidoException, ArticuloException {
+	public void completarPedido(Pedido pedido) throws PedidoException, ArticuloException, OrdenDePedidoException {
 		//Este se llama cuando se completa una orden de compra
 		int stockTotal=0;
 		boolean pedidoCompleto=true;
 		for (ItemPedido it: pedido.getItemsPedido()){
 			stockTotal = getCantidadStockTotal(it.getArticulo());
-			int cantTemp = it.getCant();
+			int cantTemp = it.getCant() - it.getArticulo().cantidadReservada(pedido.getNroPedido());
 			if (stockTotal >= cantTemp){
 				for (Ubicacion u: ubicaciones){ // revisar cuando agregamos mas de un item a la orden de pedido a ver si esta ubicacion esta actualizada.
 					for (ArticuloDeposito a : u.getArticulos())
@@ -61,7 +63,7 @@ public class ControladorDeposito {
 							a.reservarStock(pedido.getNroPedido());
 							a.update();
 							cantTemp--;
-							it.setCant(it.getCant()-1);
+							//it.setCant(it.getCant()-1);
 						}
 				}
 				it.update();
@@ -72,11 +74,12 @@ public class ControladorDeposito {
 				if (stockTotal>0){
 					for (Ubicacion u: ubicaciones){
 						for (ArticuloDeposito a : u.getArticulos())
-							if (a.getArticulo().getIdArticulo() == it.getArticulo().getIdArticulo() && it.getCant()>0 && a.getEstado().equals("DISPONIBLE")){
+							if (a.getArticulo().getIdArticulo() == it.getArticulo().getIdArticulo() && cantTemp>0 && a.getEstado().equals("DISPONIBLE")){
 								{
 									a.reservarStock(pedido.getNroPedido());
 									a.update();
-									it.setCant(it.getCant()-1);
+									cantTemp--;
+									//it.setCant(it.getCant()-1);
 								}
 							}
 					}
@@ -89,6 +92,12 @@ public class ControladorDeposito {
 			Pedido nuevoPedido = PedidoDao.getInstancia().buscarPedidoById(pedido.getNroPedido());
 			nuevoPedido.setEstado("APROBADO_EN_ESPERA_DE_DESPACHO");
 			nuevoPedido.update();
+			OrdenDePedido ordenPedido = OrdenDePedidoDao.getInstancia().buscarOPbyPedido(nuevoPedido.getNroPedido());
+			if(ordenPedido != null) {
+				ordenPedido.setEstado("COMPLETADA");
+				ordenPedido.update();
+			}
+			else JOptionPane.showMessageDialog(null, "orden dio null");
 			//modificar el array pedidosRealizados en ControladorClientes
 		}
 	}
@@ -99,7 +108,7 @@ public class ControladorDeposito {
 		List<Articulo> pedirArticulos = new ArrayList<Articulo>();
 		for (ItemPedido it: pedido.getItemsPedido()){
 			stockTotal = getCantidadStockTotal(it.getArticulo());
-			int cantTemp = it.getCant();
+			int cantTemp = it.getCant() - it.getArticulo().cantidadReservada(pedido.getNroPedido());
 			if (stockTotal >= cantTemp){
 				for (Ubicacion u: ubicaciones){
 					for (ArticuloDeposito a : u.getArticulos()){
@@ -107,7 +116,7 @@ public class ControladorDeposito {
 							a.reservarStock(pedido.getNroPedido());
 							a.update();
 							cantTemp--;
-							it.setCant(it.getCant()-1);
+							//it.setCant(it.getCant()-1);
 						}
 					}
 				}
@@ -123,10 +132,11 @@ public class ControladorDeposito {
 				if (stockTotal>0){
 					for (Ubicacion u: ubicaciones){
 						for (ArticuloDeposito a : u.getArticulos())
-							if (a.getArticulo().getIdArticulo() == it.getArticulo().getIdArticulo() && a.getEstado().equals("DISPONIBLE") && it.getCant()>0){
+							if (a.getArticulo().getIdArticulo() == it.getArticulo().getIdArticulo() && a.getEstado().equals("DISPONIBLE") && cantTemp>0){
 								a.reservarStock(pedido.getNroPedido());
 								a.update();
-								it.setCant(it.getCant()-1);
+								cantTemp--;
+								//it.setCant(it.getCant()-1);
 							}
 					}
 					it.update();
@@ -215,8 +225,9 @@ public class ControladorDeposito {
 		List<ArticuloDeposito> arts = ArticuloDepositoDao.getInstancia().cargarArticulosDeposito();
 		for (Ubicacion u : ubs) {
 			for (ArticuloDeposito a : arts)
-				if (a.getUbicacion().getIdUbicacion().equals(u.getIdUbicacion()))
+				if (a.getUbicacion().getIdUbicacion().equals(u.getIdUbicacion())) {
 					u.getArticulos().add(a);
+					}
 			this.ubicaciones.add(u);
 		}
 	}

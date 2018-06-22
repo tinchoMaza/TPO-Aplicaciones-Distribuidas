@@ -55,9 +55,10 @@ public interface InterfazRemota extends Remote {
 	 * @throws LoteException 
 	 * @throws ArticuloException 
 	 * @throws SQLException 
-	 * @throws PedidoException ***********************************************************************************************/
+	 * @throws PedidoException 
+	 * @throws OrdenDePedidoException ***********************************************************************************************/
 	
-	public abstract void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException;
+	public abstract void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException, OrdenDePedidoException;
 
 	public abstract ClienteDTO buscarClienteByDni(int dni) throws RemoteException, ClienteException;
 }

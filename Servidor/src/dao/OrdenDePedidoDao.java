@@ -5,6 +5,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import entities.OrdenDePedidoEntity;
 import java.util.*;
+
+import javax.swing.JOptionPane;
+
 import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
 import hibernate.HibernateUtil;
@@ -34,7 +37,7 @@ public class OrdenDePedidoDao {
 			s.close();
 			return id;
 		}else{
-			throw new OrdenDePedidoException("Error en el guardado de una orden de compra en la BD");
+			throw new OrdenDePedidoException("Error en el guardado de una orden de pedido en la BD");
 		}
 	}
 
@@ -42,11 +45,14 @@ public class OrdenDePedidoDao {
 		if (op != null){
 			Session s = sf.openSession();
 			s.beginTransaction();
+			JOptionPane.showMessageDialog(null, "antes update");
 			s.update(op.toEntityUpdate());
+			JOptionPane.showMessageDialog(null, "despues update");
+			s.flush();
 			s.getTransaction().commit();
 			s.close();
 		}else{
-			throw new OrdenDePedidoException("Error en el guardado de una orden de compra en la BD");
+			throw new OrdenDePedidoException("Error en el guardado de una orden de pedido en la BD");
 		}
 	}
 
@@ -62,7 +68,7 @@ public class OrdenDePedidoDao {
 			throw new OrdenDePedidoException("Error en el guardado de una orden de compra en la BD");
 		}
 	}
-	
+
 	public List<OrdenDePedido> cargarTodasOrdenPedido() throws OrdenDePedidoException{
 		List<OrdenDePedido> ordenes = new ArrayList<OrdenDePedido>();
 		Session session = sf.openSession();
@@ -80,13 +86,14 @@ public class OrdenDePedidoDao {
 
 	public boolean existeOrdenPedido(Articulo articulo, int cantidad) throws OrdenDePedidoException {
 		List<OrdenDePedido> ords = this.cargarTodasOrdenPedido();
-		for (OrdenDePedido op : ords)
+		for (OrdenDePedido op : ords) {
 			for (ItemOrdenDePedido item : op.getArticulos())
 				for (ItemPedido ip : op.getPedido().getItemsPedido()) {
 					if (item.getArticulo().getIdArticulo() == articulo.getIdArticulo() && item.getArticulo().getIdArticulo() == ip.getArticulo().getIdArticulo() &&
-							(item.getCant() - ip.getCant()) >= cantidad)
-							return true;
+							(item.getCant() - (ip.getCant()-ip.getArticulo().cantidadReservada(ip.getPedido().getNroPedido()))) >= cantidad)
+						return true;
 				}
+		}
 		return false;
 	}
 
@@ -104,6 +111,21 @@ public class OrdenDePedidoDao {
 			throw new PedidoException("Error al buscar la orden de pedido en la BD");
 		else
 			return ord.toNegocio2();
+	}
+
+	public OrdenDePedido buscarOPbyPedido(int nroPedido) {
+		Session session = sf.openSession();
+		session.beginTransaction();
+		Query query = session.createQuery("select o from OrdenDePedidoEntity o");
+		@SuppressWarnings("unchecked")
+		List<OrdenDePedidoEntity> ordenesEntity = query.list();
+		session.flush();
+		session.getTransaction().commit();
+		session.close();
+		for(OrdenDePedidoEntity ope : ordenesEntity) 
+			if(ope.getPedido().getNroPedido() == nroPedido)
+				return ope.toNegocio2();
+		return null;
 	}
 
 }

@@ -75,6 +75,11 @@ public class OrdenDePedido {
 	public int save() throws OrdenDePedidoException {
 		return OrdenDePedidoDao.getInstancia().save(this);
 	}
+	
+	public void update() throws OrdenDePedidoException {
+		OrdenDePedidoDao.getInstancia().update(this);
+	}
+
 
 	//Getters y Setters
 
@@ -175,6 +180,7 @@ public class OrdenDePedido {
 		it.setIdItemOp(id);
 		this.articulos.add(it);
 	}
+
 
 
 

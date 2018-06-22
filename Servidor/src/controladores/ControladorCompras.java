@@ -12,6 +12,7 @@ import dao.OrdenDeCompraDao;
 import excepciones.ArticuloException;
 import excepciones.LoteException;
 import excepciones.OrdenDeCompraException;
+import excepciones.OrdenDePedidoException;
 import excepciones.PedidoException;
 import excepciones.UbicacionException;
 import negocio.ArticuloDeposito;
@@ -59,7 +60,7 @@ public class ControladorCompras {
 		return null;
 	}
 
-	public void procesarOC(int idOC) throws PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException {
+	public void procesarOC(int idOC) throws PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException, OrdenDePedidoException {
 		boolean memoria = false;
 		List<ArticuloDeposito> articulosRecibidos = new ArrayList<ArticuloDeposito>();
 		Calendar c = Calendar.getInstance();

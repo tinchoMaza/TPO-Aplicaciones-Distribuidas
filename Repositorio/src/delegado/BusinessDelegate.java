@@ -80,7 +80,7 @@ public class BusinessDelegate {
 		return ir.getUbicaciones();
 	}
 
-	public void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException {
+	public void procesarOC(int idOC) throws RemoteException, PedidoException, SQLException, ArticuloException, LoteException, OrdenDeCompraException, UbicacionException, OrdenDePedidoException {
 		ir.procesarOC(idOC);
 		
 	}

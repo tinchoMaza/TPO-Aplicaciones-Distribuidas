@@ -161,5 +161,9 @@ public class Articulo {
 		this.precioVentaUnitario = precioVentaUnitario;
 	}
 
+	public int cantidadReservada(int nroPedido) {
+		return ArticuloDao.getInstancia().cantidadReservada(nroPedido, this.idArticulo);
+	}
+
 
 }
